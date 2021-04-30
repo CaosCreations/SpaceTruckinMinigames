@@ -8,7 +8,7 @@ public class RepairsManager : MonoBehaviour
     public int consecutiveWins;
     public bool IsRepairing => workstation.isRotating;
     private bool UserInputDetected => Input.GetKeyDown(KeyCode.Space) 
-        && Input.GetMouseButtonDown(0);
+        || Input.GetMouseButtonDown(0);
 
     private void Start()
     {
