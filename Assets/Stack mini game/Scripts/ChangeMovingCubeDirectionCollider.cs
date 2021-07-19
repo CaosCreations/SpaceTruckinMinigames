@@ -10,7 +10,7 @@ public class ChangeMovingCubeDirectionCollider : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Collision with " + other);
+        //Debug.Log("Collision with " + other);
         collisionWithMovingCubeEvent.Invoke();
     }
 

@@ -20,17 +20,12 @@ public class CubeMover : MonoBehaviour
         rightChangeDirectionCollider.collisionWithMovingCubeEvent += ChangeDirection;
     }
 
-    private void Update()
-    {
-        moveCube();
-    }
-
     public void ChangeDirection()
     {
         direction *= -1;
     }
 
-    private void moveCube()
+    public void MoveCube()
     {
         CurrentMovingCube.position += new Vector3(movingSpeed * 5 * Time.deltaTime, 0f, 0f) * direction;
     }
