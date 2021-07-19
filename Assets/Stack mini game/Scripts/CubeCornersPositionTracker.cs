@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class CubeCornersPositionTracker : MonoBehaviour
 {
-    [SerializeField] private float leftCornerXPosition;
-    [SerializeField] private float rightCornerXPosition;
+    public float LeftCornerXPosition { get; private set; }
+    public float RightCornerXPosition { get; private set; }
 
-    private void updateCornerPositions()
+    public void UpdateCornerPositions()
     {
-        leftCornerXPosition = transform.position.x - transform.localScale.x / 2;
-        rightCornerXPosition = transform.position.x + transform.localScale.x / 2;
+        LeftCornerXPosition = transform.position.x - transform.localScale.x / 2;
+        RightCornerXPosition = transform.position.x + transform.localScale.x / 2;
     }
 }

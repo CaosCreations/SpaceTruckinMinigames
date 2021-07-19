@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CubeMover : MonoBehaviour
 {
-    [SerializeField] private Transform currentMovingCube;
+    public Transform CurrentMovingCube;
 
     [SerializeField] private float movingSpeed;
 
@@ -32,6 +32,6 @@ public class CubeMover : MonoBehaviour
 
     private void moveCube()
     {
-        currentMovingCube.position += new Vector3(movingSpeed * 5 * Time.deltaTime, 0f, 0f) * direction;
+        CurrentMovingCube.position += new Vector3(movingSpeed * 5 * Time.deltaTime, 0f, 0f) * direction;
     }
 }
