@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class StackMinigameManager : MonoBehaviour
 {
+    [SerializeField] private int maxScore;
+
     [SerializeField] private CubeCornersPositionTracker bottomCubeCornerPositions;
     [SerializeField] private CubeCornersPositionTracker topCubeCornerPositions;
 
@@ -14,6 +16,8 @@ public class StackMinigameManager : MonoBehaviour
     [SerializeField] private CubeMover cubeMover;
 
     [SerializeField] private StackMinigameUI stackMinigameUI;
+
+
 
     private List<GameObject> stackedCubes { get; set; } = new List<GameObject>(); 
 
@@ -97,7 +101,7 @@ public class StackMinigameManager : MonoBehaviour
             topCubeCornerPositions.transform.localScale = new Vector3(cubeOverlap, topCubeCornerPositions.transform.localScale.y, topCubeCornerPositions.transform.localScale.z);
 
             // Only spawn next top cube if the stack hasn't reached to top rank yet
-            if(stackedCubes.Count >= 5)
+            if(stackedCubes.Count >= maxScore)
             {
                 gameRunning = false;
                 stackMinigameUI.SetWinUI();

@@ -458,6 +458,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e373757e784245846a49cd631bac1de1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxScore: 3
   bottomCubeCornerPositions: {fileID: 1763417209}
   topCubeCornerPositions: {fileID: 0}
   topCubePrefab: {fileID: 9138576458730590876, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
@@ -590,7 +591,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 500, y: -418.2665}
+  m_AnchoredPosition: {x: 446.77, y: -418.2665}
   m_SizeDelta: {x: 500, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1077119915
@@ -874,7 +875,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 462.32904, y: 337.59558}
+  m_AnchoredPosition: {x: 567.87274, y: 567.87274}
   m_SizeDelta: {x: 800, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!4 &1555839156 stripped
@@ -1202,7 +1203,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 500.00003, y: -418.2665}
+  m_AnchoredPosition: {x: 446.77, y: -418.2665}
   m_SizeDelta: {x: 500, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1868466522
