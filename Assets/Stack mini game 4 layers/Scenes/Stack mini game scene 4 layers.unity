@@ -459,9 +459,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxScore: 3
-  bottomCubeCornerPositions: {fileID: 1763417209}
-  topCubeCornerPositions: {fileID: 0}
-  topCubePrefab: {fileID: 9138576458730590876, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
+  cubePrefab: {fileID: 9138576458730590876, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
   cubeSpawnStartPosition: {fileID: 55187757}
   cubeMover: {fileID: 1267509927}
   stackMinigameUI: {fileID: 53942361}
@@ -875,7 +873,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 567.87274, y: 567.87274}
+  m_AnchoredPosition: {x: 328.00067, y: 385.56998}
   m_SizeDelta: {x: 800, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!4 &1555839156 stripped
@@ -964,17 +962,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1602507630}
   m_CullTransparentMesh: 1
---- !u!114 &1763417209 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9138576458730590877, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
-  m_PrefabInstance: {fileID: 9138576457238957796}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e64e879200f833348b44ede2d2bb11f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1763417212 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9138576458730590872, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}

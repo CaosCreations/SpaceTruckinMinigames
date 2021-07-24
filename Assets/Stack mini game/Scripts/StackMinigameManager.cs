@@ -6,10 +6,9 @@ public class StackMinigameManager : MonoBehaviour
 {
     [SerializeField] private int maxScore;
 
-    [SerializeField] private CubeCornersPositionTracker bottomCubeCornerPositions;
-    [SerializeField] private CubeCornersPositionTracker topCubeCornerPositions;
+    private CubeCornersPositionPile cubeCornersPositionPile = new CubeCornersPositionPile();
 
-    [SerializeField] private GameObject topCubePrefab;
+    [SerializeField] private GameObject cubePrefab;
 
     [SerializeField] private Transform cubeSpawnStartPosition;
 
@@ -36,33 +35,28 @@ public class StackMinigameManager : MonoBehaviour
         ResetGame();
     }
 
-
     public void StackCube()
     {
         // There is only one cube at the beginning. The player can place it wherever. There is no cutting involved yet.
-        if(stackedCubes.Count == 1)
+        if(cubeCornersPositionPile.CubeCornersPositionList.Count == 1)
         {
-            GameObject newTopCube = (GameObject)spawnCube(spawnPosition: bottomCubeCornerPositions.transform.position + new Vector3(0f, topCubePrefab.transform.localScale.y, 0f),
-                                                          cubeWidth: bottomCubeCornerPositions.transform.localScale.x);
-            topCubeCornerPositions = newTopCube.GetComponent<CubeCornersPositionTracker>();
 
-            cubeMover.CurrentMovingCube = topCubeCornerPositions.transform;
-
-            stackedCubes.Add(newTopCube);
+            SpawnTopCube(spawnPosition: cubeCornersPositionPile.CubeCornersPositionList[0].transform.position + new Vector3(0f, cubePrefab.transform.localScale.y, 0f),
+                                                          cubeWidth: cubeCornersPositionPile.CubeCornersPositionList[0].transform.localScale.x);
 
             return;
         }
 
-        bottomCubeCornerPositions.UpdateCornerPositions();
-        topCubeCornerPositions.UpdateCornerPositions();
+        cubeCornersPositionPile.CubeCornersPositionList[0].UpdateCornerPositions();
+        cubeCornersPositionPile.CubeCornersPositionList[1].UpdateCornerPositions();
 
         // Cubes aren't stacked
-        if (topCubeCornerPositions.LeftCornerXPosition > bottomCubeCornerPositions.RightCornerXPosition ||
-            topCubeCornerPositions.RightCornerXPosition < bottomCubeCornerPositions.LeftCornerXPosition)
+        if (cubeCornersPositionPile.CubeCornersPositionList[1].LeftCornerXPosition > cubeCornersPositionPile.CubeCornersPositionList[0].RightCornerXPosition ||
+            cubeCornersPositionPile.CubeCornersPositionList[1].RightCornerXPosition < cubeCornersPositionPile.CubeCornersPositionList[0].LeftCornerXPosition)
         {
             Debug.Log("Cubes are not stacked. Game over");
             gameRunning = false;
-            stackMinigameUI.SetLoseUI();
+            stackMinigameUI.SetGameUI(GameState.Lose);
             return;
         }
 
@@ -73,62 +67,55 @@ public class StackMinigameManager : MonoBehaviour
         // If the cube are not stacked, then it's game over.
         else
         {
-            float cubeOverlap;
+            float cubeOverlap = cubeCornersPositionPile.CubeCornersPositionList[0].transform.localScale.x
+                                - Mathf.Abs(cubeCornersPositionPile.CubeCornersPositionList[0].LeftCornerXPosition - cubeCornersPositionPile.CubeCornersPositionList[1].LeftCornerXPosition);
+
+
             float XspawnPosition;
 
             // Top cube to the left of bottom cube
-            if (topCubeCornerPositions.LeftCornerXPosition < bottomCubeCornerPositions.LeftCornerXPosition)
+            if (cubeCornersPositionPile.CubeCornersPositionList[1].LeftCornerXPosition < cubeCornersPositionPile.CubeCornersPositionList[0].LeftCornerXPosition)
             {
-                cubeOverlap = Mathf.Abs(bottomCubeCornerPositions.LeftCornerXPosition - topCubeCornerPositions.RightCornerXPosition);
-
-                XspawnPosition = bottomCubeCornerPositions.LeftCornerXPosition + cubeOverlap/2;
+                XspawnPosition = cubeCornersPositionPile.CubeCornersPositionList[0].LeftCornerXPosition + cubeOverlap/2;
             }
 
             // Top cube to the right of bottom cube
             else
             {
-                cubeOverlap = Mathf.Abs(bottomCubeCornerPositions.RightCornerXPosition - topCubeCornerPositions.LeftCornerXPosition);
-
-                XspawnPosition = bottomCubeCornerPositions.RightCornerXPosition - cubeOverlap / 2;
+                XspawnPosition = cubeCornersPositionPile.CubeCornersPositionList[1].LeftCornerXPosition + cubeOverlap/2;
             }
 
             // Cutting off the current top cube (moving and resizing it)
 
-            Vector3 newCutTopCubePosition = new Vector3(XspawnPosition, topCubeCornerPositions.transform.position.y, topCubeCornerPositions.transform.position.z);
+            Vector3 newCutTopCubePosition = new Vector3(XspawnPosition, cubeCornersPositionPile.CubeCornersPositionList[1].transform.position.y, cubeCornersPositionPile.CubeCornersPositionList[1].transform.position.z);
 
-            topCubeCornerPositions.transform.position = newCutTopCubePosition;
+            cubeCornersPositionPile.CubeCornersPositionList[1].transform.position = newCutTopCubePosition;
 
-            topCubeCornerPositions.transform.localScale = new Vector3(cubeOverlap, topCubeCornerPositions.transform.localScale.y, topCubeCornerPositions.transform.localScale.z);
+            cubeCornersPositionPile.CubeCornersPositionList[1].transform.localScale = new Vector3(cubeOverlap, cubeCornersPositionPile.CubeCornersPositionList[1].transform.localScale.y, cubeCornersPositionPile.CubeCornersPositionList[1].transform.localScale.z);
 
             // Only spawn next top cube if the stack hasn't reached to top rank yet
             if(stackedCubes.Count >= maxScore)
             {
                 gameRunning = false;
-                stackMinigameUI.SetWinUI();
+                stackMinigameUI.SetGameUI(GameState.Win);
+                return;
             }
 
-            else
-            {
-                GameObject newTopCube = (GameObject)spawnCube(spawnPosition: newCutTopCubePosition + new Vector3(0f, topCubePrefab.transform.localScale.y, 0f),
+            SpawnTopCube(spawnPosition: newCutTopCubePosition + new Vector3(0f, cubePrefab.transform.localScale.y, 0f),
                                                               cubeWidth: cubeOverlap);
-
-                stackedCubes.Add(newTopCube);
-
-                bottomCubeCornerPositions = topCubeCornerPositions.GetComponent<CubeCornersPositionTracker>();
-                topCubeCornerPositions = newTopCube.GetComponent<CubeCornersPositionTracker>();
-
-                cubeMover.CurrentMovingCube = newTopCube.transform;
-            }
         }
     }
 
-    private GameObject spawnCube(Vector3 spawnPosition, float cubeWidth)
+
+    private void SpawnTopCube(Vector3 spawnPosition, float cubeWidth)
     {
-        GameObject spawnedCube =(GameObject)Instantiate(topCubePrefab, spawnPosition, Quaternion.identity);
+        GameObject topcube = (GameObject)Instantiate(cubePrefab, spawnPosition, Quaternion.identity);
 
-        spawnedCube.transform.localScale = new Vector3(cubeWidth, spawnedCube.transform.localScale.y, spawnedCube.transform.localScale.z);
+        topcube.transform.localScale = new Vector3(cubeWidth, topcube.transform.localScale.y, topcube.transform.localScale.z);
 
-        return spawnedCube;
+        cubeMover.CurrentMovingCube = topcube.transform;
+        stackedCubes.Add(topcube);
+        cubeCornersPositionPile.Add(topcube.GetComponent<CubeCornersPositionTracker>());
     }
 
     public void ResetGame()
@@ -140,21 +127,15 @@ public class StackMinigameManager : MonoBehaviour
 
         stackedCubes.Clear();
 
+        cubeCornersPositionPile.ResetPile();
 
-        GameObject newBottomCube = (GameObject)spawnCube(cubeSpawnStartPosition.position, topCubePrefab.transform.localScale.x);
 
-        stackedCubes.Add(newBottomCube);
-
-        cubeMover.CurrentMovingCube = newBottomCube.transform;
-        
-        topCubeCornerPositions = null;
-
-        bottomCubeCornerPositions = newBottomCube.GetComponent<CubeCornersPositionTracker>();
+        SpawnTopCube(cubeSpawnStartPosition.position, cubePrefab.transform.localScale.x);
 
 
         gameRunning = true;
 
-        stackMinigameUI.SetNewGameUI();
+        stackMinigameUI.SetGameUI(GameState.NewGame);
     }
 
 

@@ -11,25 +11,27 @@ public class StackMinigameUI : MonoBehaviour
     [SerializeField] private Text outcomeText;
 
 
-    public void SetLoseUI()
+    public void SetGameUI(GameState gameState)
     {
-        outcomeText.text = "Game over!";
-        stackButton.SetActive(false);
-        replayButton.SetActive(true);
-    }
+        if(gameState == GameState.NewGame)
+        {
+            outcomeText.text = "";
+            stackButton.SetActive(true);
+            replayButton.SetActive(false);
+        }
 
-    public void SetWinUI()
-    {
-        outcomeText.text = "You won!";
-        stackButton.SetActive(false);
-        replayButton.SetActive(true);
-    }
+        else if(gameState == GameState.Win)
+        {
+            outcomeText.text = "You won!";
+            stackButton.SetActive(false);
+            replayButton.SetActive(true);
+        }
 
-    public void SetNewGameUI()
-    {
-        outcomeText.text = "";
-        stackButton.SetActive(true);
-        replayButton.SetActive(false);
+        else if(gameState == GameState.Lose)
+        {
+            outcomeText.text = "You lose!";
+            stackButton.SetActive(false);
+            replayButton.SetActive(true);
+        }
     }
-
 }
