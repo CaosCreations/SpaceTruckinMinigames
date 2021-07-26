@@ -47,12 +47,10 @@ public class StackMinigameManager : MonoBehaviour
             return;
         }
 
-        cubeCornersPositionPile.CubeCornersPositionList[0].UpdateCornerPositions();
-        cubeCornersPositionPile.CubeCornersPositionList[1].UpdateCornerPositions();
+        float cubeOverlapDistance = CubesOverlapDistance(cubeCornersPositionPile);
 
         // Cubes aren't stacked
-        if (cubeCornersPositionPile.CubeCornersPositionList[1].LeftCornerXPosition > cubeCornersPositionPile.CubeCornersPositionList[0].RightCornerXPosition ||
-            cubeCornersPositionPile.CubeCornersPositionList[1].RightCornerXPosition < cubeCornersPositionPile.CubeCornersPositionList[0].LeftCornerXPosition)
+        if (cubeOverlapDistance == 0f)
         {
             Debug.Log("Cubes are not stacked. Game over");
             gameRunning = false;
@@ -67,45 +65,74 @@ public class StackMinigameManager : MonoBehaviour
         // If the cube are not stacked, then it's game over.
         else
         {
-            float cubeOverlap = cubeCornersPositionPile.CubeCornersPositionList[0].transform.localScale.x
-                                - Mathf.Abs(cubeCornersPositionPile.CubeCornersPositionList[0].LeftCornerXPosition - cubeCornersPositionPile.CubeCornersPositionList[1].LeftCornerXPosition);
+            CubeCornersPositionTracker topCubeCornerPosition = cubeCornersPositionPile.CubeCornersPositionList[0];
+            CubeCornersPositionTracker bottomCubeCornerPosition = cubeCornersPositionPile.CubeCornersPositionList[1];
 
 
-            float XspawnPosition;
-
-            // Top cube to the left of bottom cube
-            if (cubeCornersPositionPile.CubeCornersPositionList[1].LeftCornerXPosition < cubeCornersPositionPile.CubeCornersPositionList[0].LeftCornerXPosition)
-            {
-                XspawnPosition = cubeCornersPositionPile.CubeCornersPositionList[0].LeftCornerXPosition + cubeOverlap/2;
-            }
-
-            // Top cube to the right of bottom cube
-            else
-            {
-                XspawnPosition = cubeCornersPositionPile.CubeCornersPositionList[1].LeftCornerXPosition + cubeOverlap/2;
-            }
-
-            // Cutting off the current top cube (moving and resizing it)
-
-            Vector3 newCutTopCubePosition = new Vector3(XspawnPosition, cubeCornersPositionPile.CubeCornersPositionList[1].transform.position.y, cubeCornersPositionPile.CubeCornersPositionList[1].transform.position.z);
-
-            cubeCornersPositionPile.CubeCornersPositionList[1].transform.position = newCutTopCubePosition;
-
-            cubeCornersPositionPile.CubeCornersPositionList[1].transform.localScale = new Vector3(cubeOverlap, cubeCornersPositionPile.CubeCornersPositionList[1].transform.localScale.y, cubeCornersPositionPile.CubeCornersPositionList[1].transform.localScale.z);
+            CutStickingOutTopCubeSide(topCubeCornerPosition, bottomCubeCornerPosition);
 
             // Only spawn next top cube if the stack hasn't reached to top rank yet
-            if(stackedCubes.Count >= maxScore)
+            if (stackedCubes.Count >= maxScore)
             {
                 gameRunning = false;
                 stackMinigameUI.SetGameUI(GameState.Win);
                 return;
             }
 
-            SpawnTopCube(spawnPosition: newCutTopCubePosition + new Vector3(0f, cubePrefab.transform.localScale.y, 0f),
-                                                              cubeWidth: cubeOverlap);
+            SpawnTopCube(spawnPosition: bottomCubeCornerPosition.transform.position + new Vector3(0f, cubePrefab.transform.localScale.y, 0f),
+                                                              cubeWidth: cubeOverlapDistance);
         }
     }
 
+    private void CutStickingOutTopCubeSide(CubeCornersPositionTracker topCubeCornerPosition, CubeCornersPositionTracker bottomCubeCornerPosition)
+    {
+        float XspawnPosition;
+
+        float width = CubesOverlapDistance(cubeCornersPositionPile);
+
+        // Top cube to the left of bottom cube
+        if (bottomCubeCornerPosition.GetLeftCornerPosition() < topCubeCornerPosition.GetLeftCornerPosition())
+        {
+            XspawnPosition = topCubeCornerPosition.GetLeftCornerPosition() + width / 2;
+        }
+
+        // Top cube to the right of bottom cube
+        else
+        {
+            XspawnPosition = bottomCubeCornerPosition.GetLeftCornerPosition() + width / 2;
+        }
+
+        // Cutting off the current top cube (moving and resizing it)
+
+        bottomCubeCornerPosition.transform.position = new Vector3(XspawnPosition, bottomCubeCornerPosition.transform.position.y, bottomCubeCornerPosition.transform.position.z);
+
+        bottomCubeCornerPosition.transform.localScale = new Vector3(width, bottomCubeCornerPosition.transform.localScale.y, bottomCubeCornerPosition.transform.localScale.z);
+    }
+
+    private float CubesOverlapDistance(CubeCornersPositionPile pile)
+    {
+        float topCubeLeftCornerXposition = pile.CubeCornersPositionList[0].GetLeftCornerPosition();
+        float topCubeRightCornerXposition = pile.CubeCornersPositionList[0].GetRightCornerPosition();
+        float bottomCubeLeftCornerXposition = pile.CubeCornersPositionList[1].GetLeftCornerPosition();
+        float bottomCubeRightCornerXposition = pile.CubeCornersPositionList[1].GetRightCornerPosition();
+
+        // If the corners are this far apart, it can only mean that top and bottom cubes are not stacked on top of each other,
+        // so there is no overlap
+        if (topCubeLeftCornerXposition > bottomCubeRightCornerXposition ||
+            topCubeRightCornerXposition < bottomCubeLeftCornerXposition)
+        {
+            return 0;
+        }
+
+        // The cubes are stacked, so there is some overlap
+        else
+        {
+            float cubeOverlap = pile.CubeCornersPositionList[1].transform.localScale.x
+                                - Mathf.Abs(bottomCubeLeftCornerXposition - topCubeLeftCornerXposition);
+
+            return cubeOverlap;
+        }  
+    }
 
     private void SpawnTopCube(Vector3 spawnPosition, float cubeWidth)
     {

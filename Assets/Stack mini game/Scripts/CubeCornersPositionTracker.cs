@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class CubeCornersPositionTracker : MonoBehaviour
 {
-    public float LeftCornerXPosition { get; private set; }
-    public float RightCornerXPosition { get; private set; }
-
-    public void UpdateCornerPositions()
+    public float GetLeftCornerPosition()
     {
-        LeftCornerXPosition = transform.position.x - transform.localScale.x / 2;
-        RightCornerXPosition = transform.position.x + transform.localScale.x / 2;
+        return transform.position.x - transform.localScale.x / 2;
+    }
+
+    public float GetRightCornerPosition()
+    {
+        return transform.position.x + transform.localScale.x / 2;
     }
 }
