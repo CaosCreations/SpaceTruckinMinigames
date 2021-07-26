@@ -50,7 +50,7 @@ public class StackMinigameManager : MonoBehaviour
             return;
         }
 
-        float cubeOverlapDistance = CubesOverlapDistance(cubeCornersPositionPile);
+        float cubeOverlapDistance = CubesOverlapDistance;
         CubeCornersPositionTracker bottomCubeCornerPosition = cubeCornersPositionPile.CubeCornersPositionList[1];
 
         // Cubes aren't stacked
@@ -88,7 +88,7 @@ public class StackMinigameManager : MonoBehaviour
     {
         float XspawnPosition;
 
-        float width = CubesOverlapDistance(cubeCornersPositionPile);
+        float width = CubesOverlapDistance;
 
         // Top cube to the left of bottom cube
         if (bottomCubeCornerPosition.GetLeftCornerPosition() < topCubeCornerPosition.GetLeftCornerPosition())
