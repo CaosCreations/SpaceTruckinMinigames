@@ -37,8 +37,11 @@ public class StackMinigameManager : MonoBehaviour
 
     public void StackCube()
     {
+        CubeCornersPositionTracker topCubeCornerPosition = cubeCornersPositionPile.CubeCornersPositionList[0];
+        
+
         // There is only one cube at the beginning. The player can place it wherever. There is no cutting involved yet.
-        if(cubeCornersPositionPile.CubeCornersPositionList.Count == 1)
+        if (cubeCornersPositionPile.CubeCornersPositionList.Count == 1)
         {
 
             SpawnTopCube(spawnPosition: cubeCornersPositionPile.CubeCornersPositionList[0].transform.position + new Vector3(0f, cubePrefab.transform.localScale.y, 0f),
@@ -48,6 +51,7 @@ public class StackMinigameManager : MonoBehaviour
         }
 
         float cubeOverlapDistance = CubesOverlapDistance(cubeCornersPositionPile);
+        CubeCornersPositionTracker bottomCubeCornerPosition = cubeCornersPositionPile.CubeCornersPositionList[1];
 
         // Cubes aren't stacked
         if (cubeOverlapDistance == 0f)
@@ -65,10 +69,6 @@ public class StackMinigameManager : MonoBehaviour
         // If the cube are not stacked, then it's game over.
         else
         {
-            CubeCornersPositionTracker topCubeCornerPosition = cubeCornersPositionPile.CubeCornersPositionList[0];
-            CubeCornersPositionTracker bottomCubeCornerPosition = cubeCornersPositionPile.CubeCornersPositionList[1];
-
-
             CutStickingOutTopCubeSide(topCubeCornerPosition, bottomCubeCornerPosition);
 
             // Only spawn next top cube if the stack hasn't reached to top rank yet
@@ -109,29 +109,32 @@ public class StackMinigameManager : MonoBehaviour
         bottomCubeCornerPosition.transform.localScale = new Vector3(width, bottomCubeCornerPosition.transform.localScale.y, bottomCubeCornerPosition.transform.localScale.z);
     }
 
-    private float CubesOverlapDistance(CubeCornersPositionPile pile)
+    private float CubesOverlapDistance
     {
-        float topCubeLeftCornerXposition = pile.CubeCornersPositionList[0].GetLeftCornerPosition();
-        float topCubeRightCornerXposition = pile.CubeCornersPositionList[0].GetRightCornerPosition();
-        float bottomCubeLeftCornerXposition = pile.CubeCornersPositionList[1].GetLeftCornerPosition();
-        float bottomCubeRightCornerXposition = pile.CubeCornersPositionList[1].GetRightCornerPosition();
-
-        // If the corners are this far apart, it can only mean that top and bottom cubes are not stacked on top of each other,
-        // so there is no overlap
-        if (topCubeLeftCornerXposition > bottomCubeRightCornerXposition ||
-            topCubeRightCornerXposition < bottomCubeLeftCornerXposition)
+        get 
         {
-            return 0;
+            float topCubeLeftCornerXposition = cubeCornersPositionPile.CubeCornersPositionList[0].GetLeftCornerPosition();
+            float topCubeRightCornerXposition = cubeCornersPositionPile.CubeCornersPositionList[0].GetRightCornerPosition();
+            float bottomCubeLeftCornerXposition = cubeCornersPositionPile.CubeCornersPositionList[1].GetLeftCornerPosition();
+            float bottomCubeRightCornerXposition = cubeCornersPositionPile.CubeCornersPositionList[1].GetRightCornerPosition();
+
+            // If the corners are this far apart, it can only mean that top and bottom cubes are not stacked on top of each other,
+            // so there is no overlap
+            if (topCubeLeftCornerXposition > bottomCubeRightCornerXposition ||
+                topCubeRightCornerXposition < bottomCubeLeftCornerXposition)
+            {
+                return 0;
+            }
+
+            // The cubes are stacked, so there is some overlap
+            else
+            {
+                float cubeOverlap = cubeCornersPositionPile.CubeCornersPositionList[1].transform.localScale.x
+                                    - Mathf.Abs(bottomCubeLeftCornerXposition - topCubeLeftCornerXposition);
+                return cubeOverlap;
+            }
         }
-
-        // The cubes are stacked, so there is some overlap
-        else
-        {
-            float cubeOverlap = pile.CubeCornersPositionList[1].transform.localScale.x
-                                - Mathf.Abs(bottomCubeLeftCornerXposition - topCubeLeftCornerXposition);
-
-            return cubeOverlap;
-        }  
+        
     }
 
     private void SpawnTopCube(Vector3 spawnPosition, float cubeWidth)
