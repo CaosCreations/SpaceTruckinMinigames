@@ -17,7 +17,6 @@ public class StackMinigameManager : MonoBehaviour
     [SerializeField] private StackMinigameUI stackMinigameUI;
 
 
-
     private List<GameObject> stackedCubes { get; set; } = new List<GameObject>(); 
 
     private bool gameRunning = false;
@@ -35,7 +34,10 @@ public class StackMinigameManager : MonoBehaviour
         ResetGame();
     }
 
-    public void StackCube()
+    // When the player presses the play button, he or she attempts to stack the current moving cube on top of the cube below
+    // If the cubes are stacked, the game goes on, and we spawn a new cube on top
+    // If not it's game over
+    public void DoPlayButtonAction()
     {
         CubeCornersPositionTracker topCubeCornerPosition = cubeCornersPositionPile.CubeCornersPositionList[0];
         
@@ -50,45 +52,40 @@ public class StackMinigameManager : MonoBehaviour
             return;
         }
 
-        float cubeOverlapDistance = CubesOverlapDistance;
+        float cubeOverlapDistance = CubesOverlapDistance(cubeCornersPositionPile);
         CubeCornersPositionTracker bottomCubeCornerPosition = cubeCornersPositionPile.CubeCornersPositionList[1];
 
-        // Cubes aren't stacked
+        // Cubes aren't stacked. It's game over
         if (cubeOverlapDistance == 0f)
         {
-            Debug.Log("Cubes are not stacked. Game over");
             gameRunning = false;
             stackMinigameUI.SetGameUI(GameState.Lose);
             return;
         }
 
         // Cubes are stacked
-
-        // If cubes are stacked, we cut part of the top cube so that its side that
+        // we cut part of the top cube so that its side that
         // was sticking out is now aligned with that of the bottom cube
-        // If the cube are not stacked, then it's game over.
-        else
+        CutStickingOutTopCubeSide(topCubeCornerPosition, bottomCubeCornerPosition);
+
+        // Only spawn next top cube if the stack hasn't reached to top rank yet
+        if (stackedCubes.Count >= maxScore)
         {
-            CutStickingOutTopCubeSide(topCubeCornerPosition, bottomCubeCornerPosition);
-
-            // Only spawn next top cube if the stack hasn't reached to top rank yet
-            if (stackedCubes.Count >= maxScore)
-            {
-                gameRunning = false;
-                stackMinigameUI.SetGameUI(GameState.Win);
-                return;
-            }
-
-            SpawnTopCube(spawnPosition: bottomCubeCornerPosition.transform.position + new Vector3(0f, cubePrefab.transform.localScale.y, 0f),
-                                                              cubeWidth: cubeOverlapDistance);
+            gameRunning = false;
+            stackMinigameUI.SetGameUI(GameState.Win);
+            return;
         }
+
+        SpawnTopCube(spawnPosition: bottomCubeCornerPosition.transform.position + new Vector3(0f, cubePrefab.transform.localScale.y, 0f),
+                     cubeWidth: cubeOverlapDistance);
+      
     }
 
     private void CutStickingOutTopCubeSide(CubeCornersPositionTracker topCubeCornerPosition, CubeCornersPositionTracker bottomCubeCornerPosition)
     {
         float XspawnPosition;
 
-        float width = CubesOverlapDistance;
+        float width = CubesOverlapDistance(cubeCornersPositionPile);
 
         // Top cube to the left of bottom cube
         if (bottomCubeCornerPosition.GetLeftCornerPosition() < topCubeCornerPosition.GetLeftCornerPosition())
@@ -109,14 +106,12 @@ public class StackMinigameManager : MonoBehaviour
         bottomCubeCornerPosition.transform.localScale = new Vector3(width, bottomCubeCornerPosition.transform.localScale.y, bottomCubeCornerPosition.transform.localScale.z);
     }
 
-    private float CubesOverlapDistance
+    private float CubesOverlapDistance(CubeCornersPositionPile pile)
     {
-        get 
-        {
-            float topCubeLeftCornerXposition = cubeCornersPositionPile.CubeCornersPositionList[0].GetLeftCornerPosition();
-            float topCubeRightCornerXposition = cubeCornersPositionPile.CubeCornersPositionList[0].GetRightCornerPosition();
-            float bottomCubeLeftCornerXposition = cubeCornersPositionPile.CubeCornersPositionList[1].GetLeftCornerPosition();
-            float bottomCubeRightCornerXposition = cubeCornersPositionPile.CubeCornersPositionList[1].GetRightCornerPosition();
+            float topCubeLeftCornerXposition = pile.CubeCornersPositionList[0].GetLeftCornerPosition();
+            float topCubeRightCornerXposition = pile.CubeCornersPositionList[0].GetRightCornerPosition();
+            float bottomCubeLeftCornerXposition = pile.CubeCornersPositionList[1].GetLeftCornerPosition();
+            float bottomCubeRightCornerXposition = pile.CubeCornersPositionList[1].GetRightCornerPosition();
 
             // If the corners are this far apart, it can only mean that top and bottom cubes are not stacked on top of each other,
             // so there is no overlap
@@ -129,12 +124,10 @@ public class StackMinigameManager : MonoBehaviour
             // The cubes are stacked, so there is some overlap
             else
             {
-                float cubeOverlap = cubeCornersPositionPile.CubeCornersPositionList[1].transform.localScale.x
+                float cubeOverlap = pile.CubeCornersPositionList[1].transform.localScale.x
                                     - Mathf.Abs(bottomCubeLeftCornerXposition - topCubeLeftCornerXposition);
                 return cubeOverlap;
             }
-        }
-        
     }
 
     private void SpawnTopCube(Vector3 spawnPosition, float cubeWidth)
@@ -167,7 +160,4 @@ public class StackMinigameManager : MonoBehaviour
 
         stackMinigameUI.SetGameUI(GameState.NewGame);
     }
-
-
-
 }
