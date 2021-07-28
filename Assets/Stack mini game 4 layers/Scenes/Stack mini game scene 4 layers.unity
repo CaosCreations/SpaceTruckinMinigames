@@ -638,7 +638,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 523459513}
         m_TargetAssemblyTypeName: StackMinigameManager, Assembly-CSharp
-        m_MethodName: StackCube
+        m_MethodName: DoPlayButtonAction
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
