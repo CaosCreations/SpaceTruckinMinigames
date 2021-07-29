@@ -5,33 +5,57 @@ using UnityEngine.UI;
 
 public class StackMinigameUI : MonoBehaviour
 {
-    [SerializeField] private GameObject stackButton;
-    [SerializeField] private GameObject replayButton;
+    [SerializeField] private Button stackButton;
+    [SerializeField] private Button replayButton;
 
     [SerializeField] private Text outcomeText;
 
+    [SerializeField] private StackMinigameManager stackMinigameManager;
+
+    private void Awake()
+    {
+        stackButton.onClick.RemoveAllListeners();
+        stackButton.onClick.AddListener(stackMinigameManager.DoPlayButton);
+    }
 
     public void SetGameUI(GameState gameState)
     {
-        if(gameState == GameState.NewGame)
-        {
-            outcomeText.text = "";
-            stackButton.SetActive(true);
-            replayButton.SetActive(false);
-        }
+        outcomeText.text = getGameOutComeText(gameState);
 
-        else if(gameState == GameState.Win)
+        switch (gameState)
         {
-            outcomeText.text = "You won!";
-            stackButton.SetActive(false);
-            replayButton.SetActive(true);
-        }
+            case GameState.NewGame:
+                stackButton.gameObject.SetActive(true);
+                replayButton.gameObject.SetActive(false);
+                break;
 
-        else if(gameState == GameState.Lose)
+            case GameState.Win:
+            case GameState.Lose:
+                stackButton.gameObject.SetActive(false);
+                replayButton.gameObject.SetActive(true);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private string getGameOutComeText(GameState gameState)
+    {
+        switch (gameState)
         {
-            outcomeText.text = "You lose!";
-            stackButton.SetActive(false);
-            replayButton.SetActive(true);
+            case GameState.NewGame:
+                return string.Empty;
+
+            case GameState.Win:
+                return "You won!";
+
+            case GameState.Lose:
+                return "You lose!";
+
+            default:
+                return string.Empty;
         }
     }
 }
+

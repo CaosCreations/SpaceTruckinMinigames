@@ -16,8 +16,8 @@ public class CubeMover : MonoBehaviour
 
     private void Awake()
     {
-        leftChangeDirectionCollider.collisionWithMovingCubeEvent += ChangeDirection;
-        rightChangeDirectionCollider.collisionWithMovingCubeEvent += ChangeDirection;
+        leftChangeDirectionCollider.CollisionWithMovingCubeEvent += ChangeDirection;
+        rightChangeDirectionCollider.CollisionWithMovingCubeEvent += ChangeDirection;
     }
 
     public void ChangeDirection()

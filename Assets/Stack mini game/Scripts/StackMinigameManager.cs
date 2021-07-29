@@ -37,7 +37,7 @@ public class StackMinigameManager : MonoBehaviour
     // When the player presses the play button, he or she attempts to stack the current moving cube on top of the cube below
     // If the cubes are stacked, the game goes on, and we spawn a new cube on top
     // If not it's game over
-    public void DoPlayButtonAction()
+    public void DoPlayButton()
     {
         CubeCornersPositionTracker topCubeCornerPosition = cubeCornersPositionPile.CubeCornersPositionList[0];
         
@@ -132,7 +132,7 @@ public class StackMinigameManager : MonoBehaviour
 
     private void SpawnTopCube(Vector3 spawnPosition, float cubeWidth)
     {
-        GameObject topcube = (GameObject)Instantiate(cubePrefab, spawnPosition, Quaternion.identity);
+        GameObject topcube = Instantiate(cubePrefab, spawnPosition, Quaternion.identity);
 
         topcube.transform.localScale = new Vector3(cubeWidth, topcube.transform.localScale.y, topcube.transform.localScale.z);
 

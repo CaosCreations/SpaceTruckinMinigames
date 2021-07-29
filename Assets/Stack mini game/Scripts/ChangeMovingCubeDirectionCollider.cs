@@ -5,13 +5,12 @@ using UnityEngine;
 
 public class ChangeMovingCubeDirectionCollider : MonoBehaviour
 {
-    public Action collisionWithMovingCubeEvent;
+    public Action CollisionWithMovingCubeEvent;
 
 
     private void OnTriggerEnter(Collider other)
     {
-        //Debug.Log("Collision with " + other);
-        collisionWithMovingCubeEvent.Invoke();
+        CollisionWithMovingCubeEvent.Invoke();
     }
 
 }
