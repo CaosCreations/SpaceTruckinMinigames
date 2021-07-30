@@ -187,7 +187,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &53942356
 GameObject:
@@ -286,7 +286,7 @@ RectTransform:
   - {fileID: 1848687169}
   - {fileID: 1492072831}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -305,9 +305,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2572d5741a6b8154da25c89b434c0d4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stackButton: {fileID: 1077119913}
-  replayButton: {fileID: 1848687165}
+  stackButton: {fileID: 1077119915}
+  replayButton: {fileID: 1848687166}
   outcomeText: {fileID: 1492072829}
+  stackMinigameManager: {fileID: 523459513}
 --- !u!1 &55187756
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,9 +459,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e373757e784245846a49cd631bac1de1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bottomCubeCornerPositions: {fileID: 1763417209}
-  topCubeCornerPositions: {fileID: 0}
-  topCubePrefab: {fileID: 9138576458730590876, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
+  maxScore: 5
+  cubePrefab: {fileID: 9138576458730590876, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
   cubeSpawnStartPosition: {fileID: 55187757}
   cubeMover: {fileID: 1267509927}
   stackMinigameUI: {fileID: 53942361}
@@ -477,7 +477,7 @@ Transform:
   m_Children:
   - {fileID: 55187757}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &838615972
 GameObject:
@@ -636,19 +636,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1077119916}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 523459513}
-        m_TargetAssemblyTypeName: StackMinigameManager, Assembly-CSharp
-        m_MethodName: StackCube
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1077119916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -778,7 +766,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 729fa6f65e24ec34e8c49d9a1f377809, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentMovingCube: {fileID: 1763417212}
+  CurrentMovingCube: {fileID: 0}
   movingSpeed: 5
   leftChangeDirectionCollider: {fileID: 2003728937}
   rightChangeDirectionCollider: {fileID: 1148735757}
@@ -796,7 +784,7 @@ Transform:
   - {fileID: 2003728936}
   - {fileID: 1148735756}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1492072828
 GameObject:
@@ -963,22 +951,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1602507630}
   m_CullTransparentMesh: 1
---- !u!114 &1763417209 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9138576458730590877, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
-  m_PrefabInstance: {fileID: 9138576457238957796}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e64e879200f833348b44ede2d2bb11f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &1763417212 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9138576458730590872, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
-  m_PrefabInstance: {fileID: 9138576457238957796}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1810184932
 GameObject:
   m_ObjectHideFlags: 0
@@ -1134,19 +1106,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1848687167}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 523459513}
-        m_TargetAssemblyTypeName: StackMinigameManager, Assembly-CSharp
-        m_MethodName: ResetGame
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1848687167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1765,64 +1725,3 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b67aeb77f031f1499e7d7dd22c89108, type: 3}
---- !u!1001 &9138576457238957796
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 9138576458730590872, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 9138576458730590872, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9138576458730590872, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -7.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 9138576458730590872, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 9138576458730590872, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9138576458730590872, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9138576458730590872, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9138576458730590872, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9138576458730590872, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9138576458730590872, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9138576458730590872, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9138576458730590876, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
-      propertyPath: m_Name
-      value: bottom Cube
-      objectReference: {fileID: 0}
-    - target: {fileID: 9138576458730590876, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
