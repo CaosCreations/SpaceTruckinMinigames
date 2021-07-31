@@ -23,7 +23,7 @@ public class StackMinigameUI : MonoBehaviour
     }
 
 
-        public void SetGameUI(GameState gameState)
+    public void SetGameUI(GameState gameState)
     {
         outcomeText.text = GetGameOutcomeText(gameState);
 
