@@ -10,20 +10,22 @@ public class StackMinigameUI : MonoBehaviour
 
     [SerializeField] private Text outcomeText;
 
-    [SerializeField] private StackMinigameManager stackMinigameManager;
-
     private void Awake()
     {
-        stackButton.onClick.RemoveAllListeners();
-        stackButton.onClick.AddListener(stackMinigameManager.DoPlayButton);
+        if (stackButton == null)
+            Debug.LogError("stackButton can't be null. Please assign it in the inspector.");
 
-        replayButton.onClick.RemoveAllListeners();
-        replayButton.onClick.AddListener(stackMinigameManager.ResetGame);
+        if (replayButton == null)
+            Debug.LogError("replayButton can't be null. Please assign it in the inspector.");
+
+        if (outcomeText == null)
+            Debug.LogError("outcomeText can't be null. Please assign it in the inspector.");
     }
 
-    public void SetGameUI(GameState gameState)
+
+        public void SetGameUI(GameState gameState)
     {
-        outcomeText.text = getGameOutComeText(gameState);
+        outcomeText.text = GetGameOutcomeText(gameState);
 
         switch (gameState)
         {
@@ -43,7 +45,7 @@ public class StackMinigameUI : MonoBehaviour
         }
     }
 
-    private string getGameOutComeText(GameState gameState)
+    private string GetGameOutcomeText(GameState gameState)
     {
         switch (gameState)
         {

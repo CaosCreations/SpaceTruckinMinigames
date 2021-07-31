@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StackMinigameManager : MonoBehaviour
 {
-    [SerializeField] private int maxScore;
+    [SerializeField] private int maxScore = 3;
 
     private CubeCornersPositionPile cubeCornersPositionPile = new CubeCornersPositionPile();
 
@@ -16,10 +17,33 @@ public class StackMinigameManager : MonoBehaviour
 
     [SerializeField] private StackMinigameUI stackMinigameUI;
 
+    [SerializeField] private Button stackButton;
+
+    [SerializeField] private Button replayButton;
+
 
     private List<GameObject> stackedCubes { get; set; } = new List<GameObject>(); 
 
     private bool gameRunning = false;
+
+    private void Awake()
+    {
+        stackMinigameUI = FindObjectOfType<StackMinigameUI>();
+
+        cubeMover = FindObjectOfType<CubeMover>();
+
+        if (stackButton == null)
+            Debug.LogError("stackButton can't be null. Please assign it in the inspector.");
+
+        if (replayButton == null)
+            Debug.LogError("replayButton can't be null. Please assign it in the inspector.");
+
+        stackButton.onClick.RemoveAllListeners();
+        stackButton.onClick.AddListener(DoPlayButton);
+
+        replayButton.onClick.RemoveAllListeners();
+        replayButton.onClick.AddListener(ResetGame);
+    }
 
     private void Update()
     {
