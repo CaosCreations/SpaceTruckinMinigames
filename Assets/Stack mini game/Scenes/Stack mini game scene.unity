@@ -187,7 +187,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &53942356
 GameObject:
@@ -285,8 +285,8 @@ RectTransform:
   - {fileID: 1077119914}
   - {fileID: 1848687169}
   - {fileID: 1492072831}
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_Father: {fileID: 523459514}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -308,7 +308,6 @@ MonoBehaviour:
   stackButton: {fileID: 1077119915}
   replayButton: {fileID: 1848687166}
   outcomeText: {fileID: 1492072829}
-  stackMinigameManager: {fileID: 523459513}
 --- !u!1 &55187756
 GameObject:
   m_ObjectHideFlags: 0
@@ -337,7 +336,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 523459514}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &264431714
 GameObject:
@@ -462,8 +461,8 @@ MonoBehaviour:
   maxScore: 5
   cubePrefab: {fileID: 9138576458730590876, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
   cubeSpawnStartPosition: {fileID: 55187757}
-  cubeMover: {fileID: 1267509927}
-  stackMinigameUI: {fileID: 53942361}
+  stackButton: {fileID: 1077119915}
+  replayButton: {fileID: 1848687166}
 --- !u!4 &523459514
 Transform:
   m_ObjectHideFlags: 0
@@ -475,9 +474,11 @@ Transform:
   m_LocalPosition: {x: 10.5, y: -7.25, z: -0.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 53942360}
+  - {fileID: 1267509928}
   - {fileID: 55187757}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &838615972
 GameObject:
@@ -768,8 +769,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurrentMovingCube: {fileID: 0}
   movingSpeed: 5
-  leftChangeDirectionCollider: {fileID: 2003728937}
-  rightChangeDirectionCollider: {fileID: 1148735757}
 --- !u!4 &1267509928
 Transform:
   m_ObjectHideFlags: 0
@@ -777,14 +776,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1267509926}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -7.25, z: -0.25}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -10.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2003728936}
   - {fileID: 1148735756}
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_Father: {fileID: 523459514}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1492072828
 GameObject:

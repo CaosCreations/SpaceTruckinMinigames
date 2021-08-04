@@ -10,19 +10,6 @@ public class StackMinigameUI : MonoBehaviour
 
     [SerializeField] private Text outcomeText;
 
-    private void Awake()
-    {
-        if (stackButton == null)
-            Debug.LogError("stackButton can't be null. Please assign it in the inspector.");
-
-        if (replayButton == null)
-            Debug.LogError("replayButton can't be null. Please assign it in the inspector.");
-
-        if (outcomeText == null)
-            Debug.LogError("outcomeText can't be null. Please assign it in the inspector.");
-    }
-
-
     public void SetGameUI(GameState gameState)
     {
         outcomeText.text = GetGameOutcomeText(gameState);

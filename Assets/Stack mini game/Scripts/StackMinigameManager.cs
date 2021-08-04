@@ -13,9 +13,9 @@ public class StackMinigameManager : MonoBehaviour
 
     [SerializeField] private Transform cubeSpawnStartPosition;
 
-    [SerializeField] private CubeMover cubeMover;
+    private CubeMover cubeMover;
 
-    [SerializeField] private StackMinigameUI stackMinigameUI;
+    private StackMinigameUI stackMinigameUI;
 
     [SerializeField] private Button stackButton;
 
@@ -28,15 +28,9 @@ public class StackMinigameManager : MonoBehaviour
 
     private void Awake()
     {
-        stackMinigameUI = FindObjectOfType<StackMinigameUI>();
+        stackMinigameUI = GetComponentInChildren<StackMinigameUI>();
 
-        cubeMover = FindObjectOfType<CubeMover>();
-
-        if (stackButton == null)
-            Debug.LogError("stackButton can't be null. Please assign it in the inspector.");
-
-        if (replayButton == null)
-            Debug.LogError("replayButton can't be null. Please assign it in the inspector.");
+        cubeMover = GetComponentInChildren<CubeMover>();
 
         stackButton.onClick.RemoveAllListeners();
         stackButton.onClick.AddListener(DoPlayButton);
