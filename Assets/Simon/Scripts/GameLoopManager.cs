@@ -4,25 +4,50 @@ using UnityEngine;
 
 public class GameLoopManager : MonoBehaviour
 {
-    [SerializeField] private Transform greenButton;
-    [SerializeField] private Transform redButton;
-    [SerializeField] private Transform yellowButton;
-    [SerializeField] private Transform blueButton;
-    [SerializeField] private Transform buttonHighligth;
+    private Sequence sequence = new Sequence();
 
-    private Dictionary<Colors, Transform> colorButtonPositions;
+    private bool lastSequenceItemReached = false;
 
-    private void Awake()
+    private bool SequenceAndButtonColorSame = true;
+
+    private void Start()
     {
-        colorButtonPositions = new Dictionary<Colors, Transform>
-        {
-            { Colors.Green, greenButton },
-            { Colors.Red, redButton },
-            { Colors.Yellow, yellowButton },
-            { Colors.Blue, blueButton }
-        };
+        StartGame();
     }
 
+    private void StartGame()
+    {
+        StartCoroutine(GameLoop());
+    }
+
+    private IEnumerator GameLoop()
+    {
+        sequence.CreateColorSequence(3);
+        yield return StartCoroutine(sequence.PlaySequenceCoroutine());
+
+        while(lastSequenceItemReached == false && SequenceAndButtonColorSame == true)
+        {
+            yield return null;
+        }
+
+        if(lastSequenceItemReached == true)
+        {
+            sequence.ExtendColorSequence();
+        }
+    }
+
+
+
+    private void ResetGameLoop()
+    {
+        lastSequenceItemReached = false;
+
+        SequenceAndButtonColorSame = true;
+    }
+
+    
+
+    
 
 
 }
