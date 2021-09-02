@@ -5,14 +5,9 @@ using System;
 
 public class Sequence : MonoBehaviour
 {
-    [SerializeField] ButtonPlayer buttonPlayer;
-
-    private int numberOfColors = Enum.GetNames(typeof(Colors)).Length;
-
-    private List<Colors> colorSequence;
+    public List<Colors> ColorSequence { get; private set; }
 
     private int sequenceIndex = 0;
-
     public void CreateColorSequence(int sequenceLength)
     {
         if(sequenceLength <= 0)
@@ -20,7 +15,7 @@ public class Sequence : MonoBehaviour
             Debug.LogError("The length of the sequence should be larger than 0");
         }
 
-        colorSequence = new List<Colors>();
+        ColorSequence = new List<Colors>();
 
         for(int i = 0; i < sequenceLength; i++)
         {
@@ -28,39 +23,33 @@ public class Sequence : MonoBehaviour
         }
     }
 
-    private void IterateSequence()
+    public void IterateSequence()
     {
-        if (sequenceIndex < colorSequence.Count - 1)
-        {
-            sequenceIndex++;
-        }
+       sequenceIndex++;
+    }
 
-        else
-            sequenceIndex = 0;
+    public bool SequenceReachedLastItem()
+    {
+        return sequenceIndex >= ColorSequence.Count;
+    }
+
+    public void ResetSequenceIndex()
+    {
+        sequenceIndex = 0;
     }
 
     private Colors getRandomColor()
     {
-        return (Colors)UnityEngine.Random.Range(0, numberOfColors);
+        return (Colors)UnityEngine.Random.Range(0, 4);
     }
 
-    // Extend sequence
     public void ExtendColorSequence()
     {
-        colorSequence.Add(getRandomColor());
+        ColorSequence.Add(getRandomColor());
     }
 
     public bool CompareColorWithCurrentSequenceColor(Colors color)
     {
-        return color == colorSequence[sequenceIndex];
-    }
-
-    public IEnumerator PlaySequenceCoroutine()
-    {
-        foreach (Colors color in colorSequence)
-        {
-            buttonPlayer.PlayButton(color);
-            yield return new WaitForSeconds(1f);
-        }
+        return color == ColorSequence[sequenceIndex];
     }
 }

@@ -1,53 +1,99 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameLoopManager : MonoBehaviour
 {
-    private Sequence sequence = new Sequence();
+    [SerializeField] private Button startGameButton;
 
-    private bool lastSequenceItemReached = false;
+    private MiniGamePhases currentMiniGamePhases = MiniGamePhases.WatchingPhase;
 
-    private bool SequenceAndButtonColorSame = true;
+    private Sequence sequence;
 
-    private void Start()
+    private UIManager UImanager;
+
+    private ColorButtonEffectPlayer colorButtonEffectPlayer;
+
+    private int score = 0;
+
+
+    private void Awake()
     {
-        StartGame();
+        startGameButton.onClick.RemoveAllListeners();
+        startGameButton.onClick.AddListener(StartGameLoop);
+
+        sequence = GameObject.FindObjectOfType<Sequence>();
+        UImanager = GameObject.FindObjectOfType<UIManager>();
+        colorButtonEffectPlayer = GameObject.FindObjectOfType<ColorButtonEffectPlayer>();
     }
 
-    private void StartGame()
+    private void StartGameLoop()
     {
-        StartCoroutine(GameLoop());
+        StartCoroutine(StartGameLoopCoroutine());
     }
 
-    private IEnumerator GameLoop()
+    private IEnumerator StartGameLoopCoroutine()
     {
-        sequence.CreateColorSequence(3);
-        yield return StartCoroutine(sequence.PlaySequenceCoroutine());
+        score = 0;
+        UImanager.ToggleGameOverUI(onOff: false);
+        sequence.CreateColorSequence(2);
+        yield return StartCoroutine(PlayColorSequenceCoroutine());
+    }
 
-        while(lastSequenceItemReached == false && SequenceAndButtonColorSame == true)
+    private IEnumerator PlayColorSequenceCoroutine()
+    {
+        currentMiniGamePhases = MiniGamePhases.WatchingPhase;
+        yield return StartCoroutine(colorButtonEffectPlayer.PlayButtonSequence(sequence.ColorSequence));
+        currentMiniGamePhases = MiniGamePhases.PlayingPhase;
+    }
+
+    public IEnumerator SelectColor(Colors color)
+    {
+        if (currentMiniGamePhases == MiniGamePhases.WatchingPhase)
         {
-            yield return null;
+            yield break;
         }
 
-        if(lastSequenceItemReached == true)
+        currentMiniGamePhases = MiniGamePhases.WatchingPhase;
+        yield return StartCoroutine(colorButtonEffectPlayer.PlayButton(color));
+        currentMiniGamePhases = MiniGamePhases.PlayingPhase;
+
+        if (sequence.CompareColorWithCurrentSequenceColor(color) == false && currentMiniGamePhases != MiniGamePhases.WatchingPhase)
         {
-            sequence.ExtendColorSequence();
+            GameOver();
+            yield break;
+        }
+
+        else
+        {
+            sequence.IterateSequence();
+        }
+
+        if (sequence.SequenceReachedLastItem() == true)
+        {
+            currentMiniGamePhases = MiniGamePhases.WatchingPhase;
+            score++;
+            yield return new WaitForSeconds(1f);
+            StartCoroutine(SetNextRound());
         }
     }
 
-
-
-    private void ResetGameLoop()
+    private IEnumerator SetNextRound()
     {
-        lastSequenceItemReached = false;
-
-        SequenceAndButtonColorSame = true;
+        sequence.ExtendColorSequence();
+        sequence.ResetSequenceIndex();
+        yield return StartCoroutine(PlayColorSequenceCoroutine());
     }
 
-    
+    private void GameOver()
+    {
+        currentMiniGamePhases = MiniGamePhases.WatchingPhase;
 
-    
+        sequence.ResetSequenceIndex();
 
+        UImanager.ChangeScore(score);
 
+        UImanager.ToggleGameOverUI(onOff: true);
+    }
 }
