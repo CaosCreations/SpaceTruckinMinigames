@@ -7,11 +7,14 @@ public class GameLoopManager : MonoBehaviour
 {
     [SerializeField] private Button startGameButton;
 
+    [Range(0.5f, 2.0f)]
+    [SerializeField] private float waitBetweenButtonPlay;
+
     private MiniGamePhases currentMiniGamePhases = MiniGamePhases.WatchingPhase;
 
     private Sequence sequence;
 
-    private UIManager UImanager;
+    private UIManager uiManager;
 
     private ColorButtonEffectPlayer colorButtonEffectPlayer;
 
@@ -23,9 +26,9 @@ public class GameLoopManager : MonoBehaviour
         startGameButton.onClick.RemoveAllListeners();
         startGameButton.onClick.AddListener(StartGameLoop);
 
-        sequence = GameObject.FindObjectOfType<Sequence>();
-        UImanager = GameObject.FindObjectOfType<UIManager>();
-        colorButtonEffectPlayer = GameObject.FindObjectOfType<ColorButtonEffectPlayer>();
+        sequence = FindObjectOfType<Sequence>();
+        uiManager = FindObjectOfType<UIManager>();
+        colorButtonEffectPlayer = FindObjectOfType<ColorButtonEffectPlayer>();
     }
 
     private void StartGameLoop()
@@ -36,7 +39,7 @@ public class GameLoopManager : MonoBehaviour
     private IEnumerator StartGameLoopCoroutine()
     {
         score = 0;
-        UImanager.ToggleGameOverUI(onOff: false);
+        uiManager.ToggleGameOverUI(onOff: false);
         sequence.CreateColorSequence(2);
         yield return StartCoroutine(PlayColorSequenceCoroutine());
     }
@@ -59,7 +62,7 @@ public class GameLoopManager : MonoBehaviour
         yield return StartCoroutine(colorButtonEffectPlayer.PlayButton(color));
         currentMiniGamePhases = MiniGamePhases.PlayingPhase;
 
-        if (sequence.CompareColorWithCurrentSequenceColor(color) == false && currentMiniGamePhases != MiniGamePhases.WatchingPhase)
+        if (sequence.CompareColorWithCurrentSequenceColor(color) == false)
         {
             GameOver();
             yield break;
@@ -74,7 +77,7 @@ public class GameLoopManager : MonoBehaviour
         {
             currentMiniGamePhases = MiniGamePhases.WatchingPhase;
             score++;
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(waitBetweenButtonPlay);
             StartCoroutine(SetNextRound());
         }
     }
@@ -92,8 +95,8 @@ public class GameLoopManager : MonoBehaviour
 
         sequence.ResetSequenceIndex();
 
-        UImanager.ChangeScore(score);
+        uiManager.ChangeScore(score);
 
-        UImanager.ToggleGameOverUI(onOff: true);
+        uiManager.ToggleGameOverUI(onOff: true);
     }
 }

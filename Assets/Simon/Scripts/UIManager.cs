@@ -20,6 +20,6 @@ public class UIManager : MonoBehaviour
 
     public void ChangeScore(int score)
     {
-        finalScoreText.text = ""+score;
+        finalScoreText.text = score.ToString();
     }
 }

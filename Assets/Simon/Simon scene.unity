@@ -417,7 +417,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: 0
-  _audioClip: {fileID: 8300000, guid: e468ef6de2b28ac48899e582fd3084dc, type: 3}
+  AudioClip: {fileID: 8300000, guid: 1b69365a47cf02c4dace1d726d6340d0, type: 3}
 --- !u!1 &512829324
 GameObject:
   m_ObjectHideFlags: 0
@@ -533,6 +533,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50398783da961ea40aaafb87068c522c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  greenButton: {fileID: 450656497}
+  redButton: {fileID: 756456104}
+  yellowButton: {fileID: 1829783688}
+  blueButton: {fileID: 1025249513}
+  buttonHighlight: {fileID: 65345510}
 --- !u!82 &523080694
 AudioSource:
   m_ObjectHideFlags: 0
@@ -839,7 +844,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: 1
-  _audioClip: {fileID: 8300000, guid: 7117bd83ce35e744198f51b47198e532, type: 3}
+  AudioClip: {fileID: 8300000, guid: 7117bd83ce35e744198f51b47198e532, type: 3}
 --- !u!1 &997892605
 GameObject:
   m_ObjectHideFlags: 0
@@ -1018,7 +1023,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: 3
-  _audioClip: {fileID: 8300000, guid: 7d763457ed077ac46a153e578ae370c5, type: 3}
+  AudioClip: {fileID: 8300000, guid: 7d763457ed077ac46a153e578ae370c5, type: 3}
 --- !u!1 &1166231702
 GameObject:
   m_ObjectHideFlags: 0
@@ -1642,7 +1647,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: 2
-  _audioClip: {fileID: 8300000, guid: 5ec70624fb09a5643891bfc29765bace, type: 3}
+  AudioClip: {fileID: 8300000, guid: 5ec70624fb09a5643891bfc29765bace, type: 3}
 --- !u!1 &1927076700
 GameObject:
   m_ObjectHideFlags: 0

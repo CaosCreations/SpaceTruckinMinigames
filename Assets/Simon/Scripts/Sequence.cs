@@ -38,14 +38,15 @@ public class Sequence : MonoBehaviour
         sequenceIndex = 0;
     }
 
-    private Colors getRandomColor()
+    private Colors GetRandomColor()
     {
-        return (Colors)UnityEngine.Random.Range(0, 4);
+        var allColors = Enum.GetValues(typeof(Colors));
+        return (Colors)allColors.GetValue(UnityEngine.Random.Range(0, allColors.Length));
     }
 
     public void ExtendColorSequence()
     {
-        ColorSequence.Add(getRandomColor());
+        ColorSequence.Add(GetRandomColor());
     }
 
     public bool CompareColorWithCurrentSequenceColor(Colors color)
