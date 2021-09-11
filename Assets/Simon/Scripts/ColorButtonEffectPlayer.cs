@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class ColorButtonEffectPlayer : MonoBehaviour
 {
-    private ColorButton greenButton;
-    private ColorButton redButton;
-    private ColorButton yellowButton;
-    private ColorButton blueButton;
+    [SerializeField] private ColorButton greenButton;
+    [SerializeField] private ColorButton redButton;
+    [SerializeField] private ColorButton yellowButton;
+    [SerializeField] private ColorButton blueButton;
 
-    private Transform buttonHighlight;
+    [SerializeField] private Transform buttonHighlight;
 
     private AudioSource audioSource;
 
@@ -19,16 +19,6 @@ public class ColorButtonEffectPlayer : MonoBehaviour
 
     private void Awake()
     {
-        buttonHighlight = GameObject.FindGameObjectWithTag("ButtonHighlight").transform;
-
-        greenButton = GameObject.FindGameObjectWithTag("GreenButton").GetComponent<ColorButton>();
-
-        redButton = GameObject.FindGameObjectWithTag("RedButton").GetComponent<ColorButton>();
-
-        yellowButton = GameObject.FindGameObjectWithTag("YellowButton").GetComponent<ColorButton>();
-
-        blueButton = GameObject.FindGameObjectWithTag("BlueButton").GetComponent<ColorButton>();
-
         audioSource = GetComponent<AudioSource>();
 
         colorButtonPositions = new Dictionary<Colors, Transform>
@@ -78,4 +68,12 @@ public class ColorButtonEffectPlayer : MonoBehaviour
         }
     }
 
+}
+
+public enum Colors
+{
+    Green,
+    Red,
+    Yellow,
+    Blue
 }
