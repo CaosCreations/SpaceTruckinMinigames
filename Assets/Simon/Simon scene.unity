@@ -417,7 +417,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: 0
-  AudioClip: {fileID: 8300000, guid: 1b69365a47cf02c4dace1d726d6340d0, type: 3}
+  <AudioClip>k__BackingField: {fileID: 8300000, guid: 1b69365a47cf02c4dace1d726d6340d0, type: 3}
 --- !u!1 &512829324
 GameObject:
   m_ObjectHideFlags: 0
@@ -844,7 +844,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: 1
-  AudioClip: {fileID: 8300000, guid: 7117bd83ce35e744198f51b47198e532, type: 3}
+  <AudioClip>k__BackingField: {fileID: 8300000, guid: 7117bd83ce35e744198f51b47198e532, type: 3}
 --- !u!1 &997892605
 GameObject:
   m_ObjectHideFlags: 0
@@ -1023,7 +1023,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: 3
-  AudioClip: {fileID: 8300000, guid: 7d763457ed077ac46a153e578ae370c5, type: 3}
+  <AudioClip>k__BackingField: {fileID: 8300000, guid: 7d763457ed077ac46a153e578ae370c5, type: 3}
 --- !u!1 &1166231702
 GameObject:
   m_ObjectHideFlags: 0
@@ -1126,7 +1126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startGameButton: {fileID: 1364631874}
-  waitBetweenButtonPlay: 1
+  waitBetweenColorSequences: 0.5
 --- !u!4 &1255709778
 Transform:
   m_ObjectHideFlags: 0
@@ -1648,7 +1648,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: 2
-  AudioClip: {fileID: 8300000, guid: 5ec70624fb09a5643891bfc29765bace, type: 3}
+  <AudioClip>k__BackingField: {fileID: 8300000, guid: 5ec70624fb09a5643891bfc29765bace, type: 3}
 --- !u!1 &1927076700
 GameObject:
   m_ObjectHideFlags: 0
