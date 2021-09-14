@@ -7,7 +7,8 @@ public class ColorButton : MonoBehaviour
 {
     [SerializeField] private Colors color;
 
-    public AudioClip AudioClip;
+    [field: SerializeField]
+    public AudioClip AudioClip { get; private set; }
 
     private Button button;
 

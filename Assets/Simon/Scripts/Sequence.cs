@@ -7,7 +7,10 @@ public class Sequence : MonoBehaviour
 {
     public List<Colors> ColorSequence { get; private set; }
 
+    private Colors[] allColors = (Colors[])Enum.GetValues(typeof(Colors));
+
     private int sequenceIndex = 0;
+
     public void CreateColorSequence(int sequenceLength)
     {
         if(sequenceLength <= 0)
@@ -28,10 +31,7 @@ public class Sequence : MonoBehaviour
        sequenceIndex++;
     }
 
-    public bool SequenceReachedLastItem()
-    {
-        return sequenceIndex >= ColorSequence.Count;
-    }
+    public bool SequenceReachedLastItem => sequenceIndex >= ColorSequence.Count;
 
     public void ResetSequenceIndex()
     {
@@ -40,8 +40,7 @@ public class Sequence : MonoBehaviour
 
     private Colors GetRandomColor()
     {
-        var allColors = Enum.GetValues(typeof(Colors));
-        return (Colors)allColors.GetValue(UnityEngine.Random.Range(0, allColors.Length));
+        return allColors[UnityEngine.Random.Range(0, allColors.Length)];
     }
 
     public void ExtendColorSequence()
@@ -49,7 +48,7 @@ public class Sequence : MonoBehaviour
         ColorSequence.Add(GetRandomColor());
     }
 
-    public bool CompareColorWithCurrentSequenceColor(Colors color)
+    public bool ColorIsSameAsCurrentSequenceColor(Colors color)
     {
         return color == ColorSequence[sequenceIndex];
     }

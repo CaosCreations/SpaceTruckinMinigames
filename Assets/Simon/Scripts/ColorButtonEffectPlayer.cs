@@ -43,7 +43,7 @@ public class ColorButtonEffectPlayer : MonoBehaviour
         buttonHighlight.gameObject.SetActive(!buttonHighlight.gameObject.activeSelf);
     }
 
-    public IEnumerator PlayButton(Colors color)
+    public IEnumerator PlayButtonAudioAndVisual(Colors color)
     {
         ToggleButtonHighlight();
 
@@ -53,16 +53,18 @@ public class ColorButtonEffectPlayer : MonoBehaviour
 
         audioSource.Play();
 
-        yield return new WaitForSeconds(0.75f);
+        yield return new WaitForSeconds(0.5f);
 
         ToggleButtonHighlight();
+
+        yield return new WaitForSeconds(0.15f);
     }
 
     public IEnumerator PlayButtonSequence(List<Colors> colorList)
     {
         foreach (Colors color in colorList)
         {
-            yield return StartCoroutine(PlayButton(color));
+            yield return StartCoroutine(PlayButtonAudioAndVisual(color));
         }
     }
 

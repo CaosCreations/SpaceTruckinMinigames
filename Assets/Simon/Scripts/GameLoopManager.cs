@@ -8,7 +8,7 @@ public class GameLoopManager : MonoBehaviour
     [SerializeField] private Button startGameButton;
 
     [Range(0.5f, 2.0f)]
-    [SerializeField] private float waitBetweenButtonPlay;
+    [SerializeField] private float waitBetweenColorSequences;
 
     private MiniGamePhases currentMiniGamePhases = MiniGamePhases.WatchingPhase;
 
@@ -59,10 +59,10 @@ public class GameLoopManager : MonoBehaviour
         }
 
         currentMiniGamePhases = MiniGamePhases.WatchingPhase;
-        yield return StartCoroutine(colorButtonEffectPlayer.PlayButton(color));
+        yield return StartCoroutine(colorButtonEffectPlayer.PlayButtonAudioAndVisual(color));
         currentMiniGamePhases = MiniGamePhases.PlayingPhase;
 
-        if (sequence.CompareColorWithCurrentSequenceColor(color) == false)
+        if (!sequence.ColorIsSameAsCurrentSequenceColor(color))
         {
             GameOver();
             yield break;
@@ -73,11 +73,11 @@ public class GameLoopManager : MonoBehaviour
             sequence.IterateSequence();
         }
 
-        if (sequence.SequenceReachedLastItem() == true)
+        if (sequence.SequenceReachedLastItem)
         {
             currentMiniGamePhases = MiniGamePhases.WatchingPhase;
             score++;
-            yield return new WaitForSeconds(waitBetweenButtonPlay);
+            yield return new WaitForSeconds(waitBetweenColorSequences);
             StartCoroutine(SetNextRound());
         }
     }
