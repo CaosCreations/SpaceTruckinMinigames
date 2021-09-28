@@ -15,7 +15,7 @@ public class StackMinigameManager : MonoBehaviour
 
     private CubeMover cubeMover;
 
-    private StackMinigameUI stackMinigameUI;
+    [SerializeField] private StackMinigameUI stackMinigameUI;
 
     [SerializeField] private Button stackButton;
 
@@ -28,8 +28,6 @@ public class StackMinigameManager : MonoBehaviour
 
     private void Awake()
     {
-        stackMinigameUI = GetComponentInChildren<StackMinigameUI>();
-
         cubeMover = GetComponentInChildren<CubeMover>();
 
         stackButton.onClick.RemoveAllListeners();

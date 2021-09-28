@@ -281,53 +281,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 726284195}
   m_CullTransparentMesh: 1
---- !u!1 &997892605
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 997892606}
-  - component: {fileID: 997892607}
-  m_Layer: 0
-  m_Name: UI
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &997892606
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 997892605}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.75, z: -0.25}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1927076701}
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &997892607
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 997892605}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3c4b89aefe7f0445ab5f320276eb58d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startGameButton: {fileID: 1364631874}
-  gameOverText: {fileID: 1528331908}
-  finalScoreText: {fileID: 91053169}
 --- !u!1 &1166231702
 GameObject:
   m_ObjectHideFlags: 0
@@ -810,8 +763,8 @@ RectTransform:
   - {fileID: 1364631871}
   - {fileID: 1528331906}
   - {fileID: 91053171}
-  m_Father: {fileID: 997892606}
-  m_RootOrder: 0
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -890,6 +843,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Simon game prefab package
       objectReference: {fileID: 0}
+    - target: {fileID: 2914549499004424490, guid: 7db29ef48f0cf694e8ae65aa3522d9e1, type: 3}
+      propertyPath: gameOverText
+      value: 
+      objectReference: {fileID: 1528331908}
+    - target: {fileID: 2914549499004424490, guid: 7db29ef48f0cf694e8ae65aa3522d9e1, type: 3}
+      propertyPath: finalScoreText
+      value: 
+      objectReference: {fileID: 91053169}
+    - target: {fileID: 2914549499004424490, guid: 7db29ef48f0cf694e8ae65aa3522d9e1, type: 3}
+      propertyPath: startGameButton
+      value: 
+      objectReference: {fileID: 1364631874}
     - target: {fileID: 3640986454932033513, guid: 7db29ef48f0cf694e8ae65aa3522d9e1, type: 3}
       propertyPath: m_RootOrder
       value: 3
