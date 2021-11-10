@@ -36,7 +36,6 @@ public class GridManager : MonoBehaviour
         ArrangingTilesInAGrid();
     }
 
-
     private void ArrangingTilesInAGrid()
     {
         int currentXPosition = 0;
@@ -72,5 +71,4 @@ public class GridManager : MonoBehaviour
     {
         return tileGrid[Yposition * 5 + Xposition];
     }
-
 }
