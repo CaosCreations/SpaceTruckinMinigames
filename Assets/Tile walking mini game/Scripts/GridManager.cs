@@ -1,15 +1,41 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    [SerializeField] private GameObject[] tileGrid;
+    private Tile[] tileGrid;
+
+    [SerializeField] private TileColorManager tileColorManager;
+
+    private void Awake()
+    {
+        tileGrid = FindObjectsOfType<Tile>();
+    }
 
     private void Start()
     {
+        ResetGrid();
+    }
+
+    private void ResetGrid()
+    {
+        foreach (Tile tile in tileGrid)
+        {
+            tile.TileStatus = TileStatus.untouched;
+        }
+
+        RandomlyAddingObsctacles(obstaclesNumber: 5);
+
+        foreach (Tile tile in tileGrid)
+        {
+            tileColorManager.ChangeTileColorBasedOnStatus(tile);
+        }
+
         ArrangingTilesInAGrid();
     }
+
 
     private void ArrangingTilesInAGrid()
     {
@@ -30,7 +56,19 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private GameObject GetTileAt(int Xposition, int Yposition)
+    private void RandomlyAddingObsctacles(int obstaclesNumber)
+    {
+        HashSet<int> randomTileIndices = TileWalkingUtils.GetRandomNonRepeatingNumbers(outputSize: obstaclesNumber,
+                                                                                       minNumber: 0,
+                                                                      maxNumber: tileGrid.Length - 1);
+
+        foreach (int index in randomTileIndices)
+        {
+            tileGrid[index].TileStatus = TileStatus.obstacle;
+        }
+    }
+
+    private Tile GetTileAt(int Xposition, int Yposition)
     {
         return tileGrid[Yposition * 5 + Xposition];
     }
