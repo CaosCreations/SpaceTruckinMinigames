@@ -9,8 +9,9 @@ public class TileColorManager : MonoBehaviour
 
     [SerializeField] private Color untouchedColor;
 
-    [SerializeField] private Color obstacleColor;
+    [SerializeField] private Color touchedTwiceColor;
 
+    [SerializeField] private Color obstacleColor;
 
     public void ChangeTileColorBasedOnStatus(Tile tile)
     {
@@ -25,6 +26,12 @@ public class TileColorManager : MonoBehaviour
             case TileStatus.touched:
             {
                     tile.TileGraphic.color = touchColor;
+                    break;
+            }
+
+            case TileStatus.touchedTwice:
+            {
+                    tile.TileGraphic.color = touchedTwiceColor;
                     break;
             }
 
