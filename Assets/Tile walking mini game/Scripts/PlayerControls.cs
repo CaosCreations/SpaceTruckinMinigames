@@ -8,9 +8,9 @@ public class PlayerControls : MonoBehaviour
 
     [SerializeField] private RectTransform playerRectTransform;
 
-    private Vector3 playerStartPosition;
-
     [SerializeField] private TileWalkingUI tileWalkingUI;
+
+    private Vector3 playerStartPosition;
 
     private int playerXGridPosition = 0;
 
@@ -18,69 +18,86 @@ public class PlayerControls : MonoBehaviour
 
     private bool canMove = true;
 
+    private int[] defaultInput = new int[] {0, 0};
+
+    private Dictionary<KeyCode, int[]> inputDictionary = new Dictionary<KeyCode, int[]>()
+    {
+        { KeyCode.Z, new int[]{ 0, 1} },
+        { KeyCode.W, new int[]{ 0, 1} },
+        { KeyCode.A, new int[]{ -1, 0} },
+        { KeyCode.Q, new int[]{ -1, 0} },
+        { KeyCode.S, new int[]{ 0, -1} },
+        { KeyCode.D, new int[]{ 1, 0} },
+    };
 
     private void Awake()
     {
         playerStartPosition = playerRectTransform.localPosition;
+        gridManager.WinEvent += DisablePlayerMovement;
+        gridManager.LoseEvent += DisablePlayerMovement;
     }
 
-
-    private void Update()
-    {
-        PlayerInput();
-    }
-
-    private void PlayerInput()
+    private void OnGUI()
     {
         if (canMove == false)
             return;
 
-        if (Input.GetKeyDown(KeyCode.Z))
-            MovePlayer(Xmovement: 0, Ymovement: 1);
+        int[] playerInput = GetPlayerInput();
 
-        else if (Input.GetKeyDown(KeyCode.Q))
-            MovePlayer(Xmovement: -1, Ymovement: 0);
+        if (playerInput[0] == 0 && playerInput[1] == 0)
+            return;
 
-        else if (Input.GetKeyDown(KeyCode.S))
-            MovePlayer(Xmovement: 0, Ymovement: -1);
+        if (CheckIfTileIsWalkable(XInput: playerInput[0], YInput: playerInput[1]) == false)
+            return;
 
-        else if (Input.GetKeyDown(KeyCode.D))
-            MovePlayer(Xmovement: 1, Ymovement: 0);
+        MovePlayerToTile(Xmovement: playerInput[0], Ymovement: playerInput[1]);
+
+        gridManager.UpdateTileStatus(playerXGridPosition, playerYGridPosition);
     }
 
-    private void MovePlayer(int Xmovement, int Ymovement)
+    private int[] GetPlayerInput()
     {
-        Tile desiredTile = gridManager.GetTileAt(playerXGridPosition + Xmovement, playerYGridPosition + Ymovement);
+        Event currentEvent = Event.current;
 
-        if(desiredTile == null || desiredTile.TileStatus == TileStatus.obstacle)
+        if (currentEvent != null && 
+            currentEvent.isKey == true && 
+            currentEvent.type == EventType.KeyDown == true &&
+            inputDictionary.ContainsKey(currentEvent.keyCode) ==  true
+            )
         {
-            return;
+            return inputDictionary[currentEvent.keyCode];
         }
 
-        if(desiredTile.TileStatus == TileStatus.touched)
+        return defaultInput;
+    }
+
+    private bool CheckIfTileIsWalkable(int XInput, int YInput)
+    {
+        Tile desiredTile = gridManager.GetTileAt(playerXGridPosition + XInput, playerYGridPosition + YInput);
+
+        if (desiredTile == null || desiredTile.TileStatus == TileStatus.obstacle)
         {
-            tileWalkingUI.ToggleGameOverUI();
-            canMove = false;
+            return false;
         }
 
-        playerRectTransform.position = desiredTile.RectTransform.position;
+        return true;
+    }
 
+    // The player moves on the grid one tile at a time. Left, right, up or down.
+    // We use the grid's X and Y axis to do so
+
+    private void MovePlayerToTile(int Xmovement, int Ymovement)
+    {
         playerXGridPosition += Xmovement;
         playerYGridPosition += Ymovement;
 
-
-        /// What lies below could be moved to a different function
-
-        gridManager.WalkOnTile(playerXGridPosition, playerYGridPosition);
-
-        if(gridManager.UntouchedTileCount == 0)
-        {
-            Debug.Log("Toggle win UI");
-            tileWalkingUI.ToggleWinUI();
-            canMove = false;
-        }
+        playerRectTransform.position = gridManager.GetTileAt(playerXGridPosition, playerYGridPosition).RectTransform.position;
     }
 
+    private void DisablePlayerMovement()
+    {
+        canMove = false;
+    }
 
     public void ResetPlayerMovement()
     {

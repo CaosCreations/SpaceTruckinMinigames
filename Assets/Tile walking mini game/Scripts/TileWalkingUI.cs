@@ -22,7 +22,8 @@ public class TileWalkingUI : MonoBehaviour
         gameOverButton.onClick.AddListener(playerControls.ResetPlayerMovement);
         gameOverButton.onClick.AddListener(DisableAllUIElements);
 
-        gameOverButton.gameObject.SetActive(false);
+        gridManager.WinEvent += ToggleWinUI;
+        gridManager.LoseEvent += ToggleGameOverUI;
     }
 
     public void ToggleGameOverUI()
