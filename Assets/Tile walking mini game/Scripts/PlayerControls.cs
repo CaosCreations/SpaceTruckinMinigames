@@ -20,15 +20,10 @@ public class PlayerControls : MonoBehaviour
 
     private int[] defaultInput = new int[] {0, 0};
 
-    private Dictionary<KeyCode, int[]> inputDictionary = new Dictionary<KeyCode, int[]>()
-    {
-        { KeyCode.Z, new int[]{ 0, 1} },
-        { KeyCode.W, new int[]{ 0, 1} },
-        { KeyCode.A, new int[]{ -1, 0} },
-        { KeyCode.Q, new int[]{ -1, 0} },
-        { KeyCode.S, new int[]{ 0, -1} },
-        { KeyCode.D, new int[]{ 1, 0} },
-    };
+    private int[] upInput = new int[] { 0, 1 };
+    private int[] downInput = new int[] { 0, -1 };
+    private int[] leftInput = new int[] { -1, 0 };
+    private int[] rightInput = new int[] { 1, 0 };
 
     private void Awake()
     {
@@ -37,36 +32,32 @@ public class PlayerControls : MonoBehaviour
         gridManager.LoseEvent += DisablePlayerMovement;
     }
 
-    private void OnGUI()
+    private void Update()
     {
-        if (canMove == false)
+        if (!canMove)
             return;
 
         int[] playerInput = GetPlayerInput();
 
-        if (playerInput[0] == 0 && playerInput[1] == 0)
-            return;
-
-        if (CheckIfTileIsWalkable(XInput: playerInput[0], YInput: playerInput[1]) == false)
+        if (playerInput == defaultInput)
             return;
 
         MovePlayerToTile(Xmovement: playerInput[0], Ymovement: playerInput[1]);
-
-        gridManager.UpdateTileStatus(playerXGridPosition, playerYGridPosition);
     }
 
     private int[] GetPlayerInput()
     {
-        Event currentEvent = Event.current;
+        if (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.W))
+            return upInput;
 
-        if (currentEvent != null && 
-            currentEvent.isKey == true && 
-            currentEvent.type == EventType.KeyDown == true &&
-            inputDictionary.ContainsKey(currentEvent.keyCode) ==  true
-            )
-        {
-            return inputDictionary[currentEvent.keyCode];
-        }
+        else if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.A))
+            return leftInput;
+
+        else if (Input.GetKeyDown(KeyCode.S))
+            return downInput;
+
+        else if (Input.GetKeyDown(KeyCode.D))
+            return rightInput;
 
         return defaultInput;
     }
@@ -75,12 +66,12 @@ public class PlayerControls : MonoBehaviour
     {
         Tile desiredTile = gridManager.GetTileAt(playerXGridPosition + XInput, playerYGridPosition + YInput);
 
-        if (desiredTile == null || desiredTile.TileStatus == TileStatus.obstacle)
+        if (desiredTile != null && desiredTile.TileStatus != TileStatus.Obstacle)
         {
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     // The player moves on the grid one tile at a time. Left, right, up or down.
@@ -88,10 +79,14 @@ public class PlayerControls : MonoBehaviour
 
     private void MovePlayerToTile(int Xmovement, int Ymovement)
     {
-        playerXGridPosition += Xmovement;
-        playerYGridPosition += Ymovement;
+        if (CheckIfTileIsWalkable(XInput: Xmovement, YInput: Ymovement))
+        {
+            playerXGridPosition += Xmovement;
+            playerYGridPosition += Ymovement;
 
-        playerRectTransform.position = gridManager.GetTileAt(playerXGridPosition, playerYGridPosition).RectTransform.position;
+            playerRectTransform.position = gridManager.GetTileAt(playerXGridPosition, playerYGridPosition).RectTransform.position;
+            gridManager.UpdateTileStatus(playerXGridPosition, playerYGridPosition);
+        }  
     }
 
     private void DisablePlayerMovement()

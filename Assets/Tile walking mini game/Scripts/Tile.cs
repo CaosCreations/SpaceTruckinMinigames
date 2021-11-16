@@ -8,23 +8,17 @@ using UnityEngine.UI;
 [RequireComponent(typeof(RectTransform))]
 public class Tile : MonoBehaviour
 {
-    public TileStatus TileStatus;
+    [HideInInspector] public TileStatus TileStatus;
 
-    public RawImage TileGraphic { get; private set; }
+    public RawImage TileGraphic;
 
-    public RectTransform RectTransform { get; private set; }
-
-    private void Awake()
-    {
-        TileGraphic = GetComponent<RawImage>();
-        RectTransform = GetComponent<RectTransform>();
-    }
+    public RectTransform RectTransform;
 }
 
 public enum TileStatus
 {
-    obstacle,
-    touched,
-    touchedTwice,
-    untouched
+    Obstacle,
+    Touched,
+    TouchedTwice,
+    Untouched
 }

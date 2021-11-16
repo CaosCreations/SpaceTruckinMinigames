@@ -5,22 +5,28 @@ using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    [SerializeField] private Tile[][] tileGrid;
+    private Tile[] tileGrid;
+
+    [SerializeField] private Transform tileContainer;
 
     [SerializeField] private TileColorManager tileColorManager;
 
     [SerializeField] private ObstaclesPosition[][] obstacleLayouts;
+
+    [SerializeField] private GameObject TilePrefab;
 
     public Action WinEvent;
 
     public Action LoseEvent;
     public int UntouchedTileCount { get; private set; }
 
+    public int GridWidth { get; private set; } = 5;
+    public int GridHeight { get; private set; } = 5;
+
     private void Awake()
     {
-        PopulateTileGrid();
-
         CreateObstaclesLayouts();
+        SpawnTiles();
     }
 
     private void Start()
@@ -30,70 +36,48 @@ public class GridManager : MonoBehaviour
 
     public void ResetGrid()
     {
-        foreach (Tile[] tileColumn in tileGrid)
+        foreach (Tile tile in tileGrid)
         {
-            foreach(Tile tile in tileColumn)
-            {
-                tile.TileStatus = TileStatus.untouched;
-            }
+            tile.TileStatus = TileStatus.Untouched;
         }
 
-        ObstaclesPosition[] randomlyPickedLayout = obstacleLayouts[UnityEngine.Random.Range(0, obstacleLayouts.Length)];
+        AddingObsctacles();
 
-        UntouchedTileCount = 25 - randomlyPickedLayout.Length;
-
-        AddingObsctacles(randomlyPickedLayout);
-
-        foreach (Tile[] tileColumn in tileGrid)
+        foreach (Tile tile in tileGrid)
         {
-            foreach (Tile tile in tileColumn)
-            {
-                tileColorManager.ChangeTileColorBasedOnStatus(tile);
-            }
+            tileColorManager.ChangeTileColorBasedOnStatus(tile);
         }
-
-        ArrangingTilesInAGrid();
 
         UpdateTileStatus(0, 0);
     }
 
-    private void PopulateTileGrid()
+    private void AddingObsctacles()
     {
-        tileGrid = new Tile[5][];
+        ObstaclesPosition[] randomlyPickedLayout = obstacleLayouts[UnityEngine.Random.Range(0, obstacleLayouts.Length)];
 
-        Tile[] tiles = FindObjectsOfType<Tile>();
+        UntouchedTileCount = GridWidth * GridHeight - randomlyPickedLayout.Length;
 
-        for (int x = 0, i = 0; x < 5; x++)
-        {
-            tileGrid[x] = new Tile[5];
-
-            for (int y = 0; y < 5; y++, i++)
-            {
-                tileGrid[x][y] = tiles[i];
-            }
-        }
-    }
-
-    private void AddingObsctacles(ObstaclesPosition[] obstaclePositionLayout)
-    {
-        foreach (ObstaclesPosition item in obstaclePositionLayout)
+        foreach (ObstaclesPosition item in randomlyPickedLayout)
         {
             Tile tile = GetTileAt(item.Xposition, item.Yposition);
 
-            tile.TileStatus = TileStatus.obstacle;
+            tile.TileStatus = TileStatus.Obstacle;
         }
     }
 
-    private void ArrangingTilesInAGrid()
+    private void SpawnTiles()
     {
         int currentXPosition = -225;
         int currentYPosition = -225;
 
-        for (int x = 0; x < 5; x++)
+        tileGrid = new Tile[GridWidth * GridHeight];
+
+        for (int x = 0; x < GridWidth; x++)
         {
-            for (int y = 0; y < 5; y++)
+            for (int y = 0; y < GridHeight; y++)
             {
-                tileGrid[x][y].GetComponent<RectTransform>().localPosition = new Vector2(currentXPosition, currentYPosition);
+                tileGrid[x + y * GridWidth] = Instantiate(TilePrefab, tileContainer).GetComponent<Tile>();
+                tileGrid[x + y * GridWidth].gameObject.GetComponent<RectTransform>().localPosition = new Vector2(currentXPosition, currentYPosition);
 
                 currentYPosition += 100;
             }
@@ -139,15 +123,15 @@ public class GridManager : MonoBehaviour
     {
         Tile tile = GetTileAt(Xposition, Yposition);
 
-        if (tile.TileStatus == TileStatus.untouched)
+        if (tile.TileStatus == TileStatus.Untouched)
         {
-            tile.TileStatus = TileStatus.touched;
+            tile.TileStatus = TileStatus.Touched;
             UntouchedTileCount--;
         }
 
-        else if (tile.TileStatus == TileStatus.touched)
+        else if (tile.TileStatus == TileStatus.Touched)
         {
-            tile.TileStatus = TileStatus.touchedTwice;
+            tile.TileStatus = TileStatus.TouchedTwice;
             LoseEvent();
         }
 
@@ -159,9 +143,9 @@ public class GridManager : MonoBehaviour
 
     public Tile GetTileAt(int Xposition, int Yposition)
     {
-        if ((Xposition) > 4 || (Yposition) > 4 || (Xposition) < 0 || (Yposition) < 0)
+        if (Xposition > GridWidth - 1 || Yposition > GridHeight - 1 || Xposition < 0 || Yposition < 0)
             return null;
-        else
-            return tileGrid[Xposition][Yposition];
+
+        return tileGrid[Xposition + Yposition * GridWidth];
     }
 }

@@ -17,29 +17,21 @@ public class TileColorManager : MonoBehaviour
     {
         switch(tile.TileStatus)
         {
-            case TileStatus.untouched:
-            {
+            case TileStatus.Untouched:
                     tile.TileGraphic.color = untouchedColor;
                     break;
-            }
 
-            case TileStatus.touched:
-            {
+            case TileStatus.Touched:
                     tile.TileGraphic.color = touchColor;
                     break;
-            }
 
-            case TileStatus.touchedTwice:
-            {
+            case TileStatus.TouchedTwice:
                     tile.TileGraphic.color = touchedTwiceColor;
                     break;
-            }
 
-            case TileStatus.obstacle:
-            {
+            case TileStatus.Obstacle:
                     tile.TileGraphic.color = obstacleColor;
                     break;
-            }
         }
     }
 }
