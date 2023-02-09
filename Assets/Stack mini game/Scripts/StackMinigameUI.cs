@@ -5,10 +5,25 @@ using UnityEngine.UI;
 
 public class StackMinigameUI : MonoBehaviour
 {
+    [SerializeField] private GameplayManager stackMinigameManager;
+
     [SerializeField] private Button stackButton;
     [SerializeField] private Button replayButton;
 
     [SerializeField] private Text outcomeText;
+
+    private void Awake()
+    {
+        stackButton.onClick.RemoveAllListeners();
+        stackButton.onClick.AddListener(stackMinigameManager.DoPlayButton);
+
+        replayButton.onClick.RemoveAllListeners();
+        replayButton.onClick.AddListener(stackMinigameManager.ResetGame);
+
+        stackMinigameManager.GameResetEvent += () => SetGameUI(GameState.NewGame);
+        stackMinigameManager.GameWinEvent += () => SetGameUI(GameState.Win);
+        stackMinigameManager.GameLoseEvent += () => SetGameUI(GameState.Lose);
+    }
 
     public void SetGameUI(GameState gameState)
     {

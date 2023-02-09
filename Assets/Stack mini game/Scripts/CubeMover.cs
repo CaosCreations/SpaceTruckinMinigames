@@ -4,14 +4,25 @@ using UnityEngine;
 
 public class CubeMover : MonoBehaviour
 {
-    public Transform CurrentMovingCube;
+    [SerializeField] private GameplayManager stackMinigameManager;
+
+    [SerializeField] private CubeSpawner cubeSpawner;
+
+    private Transform currentMovingCube;
 
     [SerializeField] private float movingSpeed;
 
     private float direction = 1;
 
+    private bool canMoveCube;
+
     private void Awake()
     {
+        cubeSpawner.CubeSpawnedEvent += SetMovingCube;
+
+        stackMinigameManager.GameEndEvent += () => ToggleMoveCube(false);
+        stackMinigameManager.GameResetEvent += () => ToggleMoveCube(true);
+
         ChangeMovingCubeDirectionCollider[] ChangeMovingCubeDirectionColliders = GetComponentsInChildren<ChangeMovingCubeDirectionCollider>();
 
         foreach(ChangeMovingCubeDirectionCollider item in ChangeMovingCubeDirectionColliders)
@@ -20,13 +31,29 @@ public class CubeMover : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        MoveCube();
+    }
+
     public void ChangeDirection()
     {
         direction *= -1;
     }
 
-    public void MoveCube()
+    private void MoveCube()
     {
-        CurrentMovingCube.position += new Vector3(movingSpeed * 5 * Time.deltaTime, 0f, 0f) * direction;
+        if(currentMovingCube != null && canMoveCube == true)
+            currentMovingCube.position += new Vector3(movingSpeed * 5 * Time.deltaTime, 0f, 0f) * direction;
+    }
+
+    private void ToggleMoveCube(bool onOff)
+    {
+        canMoveCube = onOff;
+    }
+
+    private void SetMovingCube(GameObject cube)
+    {
+        currentMovingCube = cube.transform;
     }
 }
