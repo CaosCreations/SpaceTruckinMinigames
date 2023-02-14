@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/Game result message", order = 1)]
-public class GameResultMessage : ScriptableObject
+[CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/Game result UI data", order = 1)]
+public class GameResultUIData : ScriptableObject
 {
     [SerializeField] private string state;
     public string State => state;
@@ -19,6 +19,4 @@ public class GameResultMessage : ScriptableObject
     [SerializeField] private bool replayButtonActive;
 
     public bool ReplayButtonActive => replayButtonActive;
-
-
 }

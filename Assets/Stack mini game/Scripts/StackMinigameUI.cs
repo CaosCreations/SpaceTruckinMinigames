@@ -13,15 +13,15 @@ public class StackMinigameUI : MonoBehaviour
 
     [SerializeField] private Text outcomeText;
 
-    [SerializeField] private GameResultMessage[] gameResultMessages;
+    [SerializeField] private GameResultUIData[] gameResultMessages;
 
-    private Dictionary<string, GameResultMessage> gameResultMessageDictionary = new Dictionary<string, GameResultMessage>();
+    private Dictionary<string, GameResultUIData> gameResultMessageDictionary = new Dictionary<string, GameResultUIData>();
 
     private void Awake()
     {
-        foreach(GameResultMessage item in gameResultMessages)
+        foreach(GameResultUIData gameResultUIdata in gameResultMessages)
         {
-            gameResultMessageDictionary.Add(item.State, item);
+            gameResultMessageDictionary.Add(gameResultUIdata.State, gameResultUIdata);
         }
 
         stackButton.onClick.RemoveAllListeners();
@@ -38,7 +38,7 @@ public class StackMinigameUI : MonoBehaviour
     {
         string result;
 
-        foreach (GameResultMessage item in gameResultMessages) 
+        foreach (GameResultUIData item in gameResultMessages) 
         { 
             if(gameState.TryGetState(item.State, out result) == true && result == gameState.CurrentState)
             {

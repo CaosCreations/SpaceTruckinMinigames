@@ -76,7 +76,6 @@ public class GameplayManager : MonoBehaviour
         cubeSpawner.SpawnStackedCube(spawnPosition: bottomCubeCornerPosition.transform.position, setWidth: cubeOverlapDistance);
     }
 
-
     public void ResetGame()
     {
         gameStates.SetCurrentState("new game");
