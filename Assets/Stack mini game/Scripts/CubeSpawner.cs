@@ -9,6 +9,8 @@ public class CubeSpawner : MonoBehaviour
 
     [SerializeField] private Transform cubeSpawnStartPosition;
 
+    [SerializeField] private CubeStack cubeStack;
+
     public Action<GameObject> CubeSpawnedEvent;
 
     public void SpawnBottomCube()
@@ -29,5 +31,30 @@ public class CubeSpawner : MonoBehaviour
         spawnedCube.transform.localScale = new Vector3(setWidth, spawnedCube.transform.localScale.y, spawnedCube.transform.localScale.z);
 
         CubeSpawnedEvent.Invoke(spawnedCube);
+    }
+
+    public void CutCube(CubeCornersPositionTracker topCubeCornerPosition, CubeCornersPositionTracker bottomCubeCornerPosition)
+    {
+        float XspawnPosition;
+
+        float width = cubeStack.CubesOverlapDistance();
+
+        // Top cube to the left of bottom cube
+        if (bottomCubeCornerPosition.GetLeftCornerPosition() < topCubeCornerPosition.GetLeftCornerPosition())
+        {
+            XspawnPosition = topCubeCornerPosition.GetLeftCornerPosition() + width / 2;
+        }
+
+        // Top cube to the right of bottom cube
+        else
+        {
+            XspawnPosition = bottomCubeCornerPosition.GetLeftCornerPosition() + width / 2;
+        }
+
+        // Cutting off the current top cube (moving and resizing it)
+
+        bottomCubeCornerPosition.transform.position = new Vector3(XspawnPosition, bottomCubeCornerPosition.transform.position.y, bottomCubeCornerPosition.transform.position.z);
+
+        bottomCubeCornerPosition.transform.localScale = new Vector3(width, bottomCubeCornerPosition.transform.localScale.y, bottomCubeCornerPosition.transform.localScale.z);
     }
 }

@@ -6,7 +6,7 @@ public class CubeStack : MonoBehaviour
 {
     [SerializeField] private CubeSpawner cubeSpawner;
 
-    [SerializeField] private GameplayManager stackMinigameManager;
+    [SerializeField] private GameplayManager gameplayManager;
 
     public CubeCornersPositionPile CubeCornersPositionPile { get; private set; } = new CubeCornersPositionPile();
 
@@ -16,7 +16,7 @@ public class CubeStack : MonoBehaviour
     {
         cubeSpawner.CubeSpawnedEvent += AddTopCubeDataToPile;
 
-        stackMinigameManager.GameResetEvent += Reset;
+        gameplayManager.GameResetEvent += Reset;
     }
 
     public float CubesOverlapDistance()

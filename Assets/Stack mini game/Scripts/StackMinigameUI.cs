@@ -2,66 +2,53 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Networking.UnityWebRequest;
 
 public class StackMinigameUI : MonoBehaviour
 {
-    [SerializeField] private GameplayManager stackMinigameManager;
+    [SerializeField] private GameplayManager gameplayManager;
 
     [SerializeField] private Button stackButton;
     [SerializeField] private Button replayButton;
 
     [SerializeField] private Text outcomeText;
 
+    [SerializeField] private GameResultMessage[] gameResultMessages;
+
+    private Dictionary<string, GameResultMessage> gameResultMessageDictionary = new Dictionary<string, GameResultMessage>();
+
     private void Awake()
     {
+        foreach(GameResultMessage item in gameResultMessages)
+        {
+            gameResultMessageDictionary.Add(item.State, item);
+        }
+
         stackButton.onClick.RemoveAllListeners();
-        stackButton.onClick.AddListener(stackMinigameManager.DoPlayButton);
+        stackButton.onClick.AddListener(gameplayManager.DoPlayButton);
 
         replayButton.onClick.RemoveAllListeners();
-        replayButton.onClick.AddListener(stackMinigameManager.ResetGame);
+        replayButton.onClick.AddListener(gameplayManager.ResetGame);
 
-        stackMinigameManager.GameResetEvent += () => SetGameUI(GameState.NewGame);
-        stackMinigameManager.GameWinEvent += () => SetGameUI(GameState.Win);
-        stackMinigameManager.GameLoseEvent += () => SetGameUI(GameState.Lose);
+        gameplayManager.GameResetEvent += () => SetGameUI(gameplayManager.GameStates);
+        gameplayManager.GameEndEvent += () => SetGameUI(gameplayManager.GameStates);
     }
 
     public void SetGameUI(GameState gameState)
     {
-        outcomeText.text = GetGameOutcomeText(gameState);
+        string result;
 
-        switch (gameState)
-        {
-            case GameState.NewGame:
-                stackButton.gameObject.SetActive(true);
-                replayButton.gameObject.SetActive(false);
-                break;
+        foreach (GameResultMessage item in gameResultMessages) 
+        { 
+            if(gameState.TryGetState(item.State, out result) == true && result == gameState.CurrentState)
+            {
+                outcomeText.text = item.Message;
 
-            case GameState.Win:
-            case GameState.Lose:
-                stackButton.gameObject.SetActive(false);
-                replayButton.gameObject.SetActive(true);
-                break;
+                stackButton.gameObject.SetActive(item.StackButtonActive);
+                replayButton.gameObject.SetActive(item.ReplayButtonActive);
 
-            default:
-                break;
-        }
-    }
-
-    private string GetGameOutcomeText(GameState gameState)
-    {
-        switch (gameState)
-        {
-            case GameState.NewGame:
-                return string.Empty;
-
-            case GameState.Win:
-                return "You won!";
-
-            case GameState.Lose:
-                return "You lose!";
-
-            default:
-                return string.Empty;
+                return;
+            }
         }
     }
 }

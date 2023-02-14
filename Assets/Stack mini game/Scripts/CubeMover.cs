@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CubeMover : MonoBehaviour
 {
-    [SerializeField] private GameplayManager stackMinigameManager;
+    [SerializeField] private GameplayManager gameplayManager;
 
     [SerializeField] private CubeSpawner cubeSpawner;
 
@@ -20,8 +20,8 @@ public class CubeMover : MonoBehaviour
     {
         cubeSpawner.CubeSpawnedEvent += SetMovingCube;
 
-        stackMinigameManager.GameEndEvent += () => ToggleMoveCube(false);
-        stackMinigameManager.GameResetEvent += () => ToggleMoveCube(true);
+        gameplayManager.GameEndEvent += () => ToggleMoveCube(false);
+        gameplayManager.GameResetEvent += () => ToggleMoveCube(true);
 
         ChangeMovingCubeDirectionCollider[] ChangeMovingCubeDirectionColliders = GetComponentsInChildren<ChangeMovingCubeDirectionCollider>();
 
