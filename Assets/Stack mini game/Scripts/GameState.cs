@@ -8,7 +8,7 @@ using static UnityEngine.Random;
 [Serializable]
 public class GameState
 {
-    [SerializeField] private string[] states;
+    [SerializeField] private StackMiniGame_StateRegister stateRegister;
 
     public string CurrentState { get; private set; }
 
@@ -22,9 +22,9 @@ public class GameState
 
     public bool TryGetState(string state, out string result)
     {
-        state.ToLower().Trim();
+        state = state.ToLower().Trim();
 
-        foreach (string item in states) 
+        foreach (string item in stateRegister.States) 
         {
             if (item == state)
             {

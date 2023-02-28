@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameplayManager : MonoBehaviour
+public class StackMiniGame_GameplayManager : MonoBehaviour
 {
     [SerializeField] private CubeSpawner cubeSpawner;
 

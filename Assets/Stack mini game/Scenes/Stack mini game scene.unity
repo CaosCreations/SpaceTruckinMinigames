@@ -507,7 +507,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 523459512}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e373757e784245846a49cd631bac1de1, type: 3}
+  m_Script: {fileID: 11500000, guid: 555848340cb35fe45940cf96f8ebaa6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cubeSpawner: {fileID: 110137952}
@@ -515,11 +515,7 @@ MonoBehaviour:
   fullWinScore: 5
   partialWinScore: 3
   gameStates:
-    states:
-    - full win
-    - partial win
-    - lose
-    - new game
+    stateRegister: {fileID: 11400000, guid: 9bf82df3fc565f74d919ab3b17d651d6, type: 2}
 --- !u!4 &523459514
 Transform:
   m_ObjectHideFlags: 0

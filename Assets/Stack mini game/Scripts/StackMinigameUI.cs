@@ -6,7 +6,7 @@ using static UnityEngine.Networking.UnityWebRequest;
 
 public class StackMinigameUI : MonoBehaviour
 {
-    [SerializeField] private GameplayManager gameplayManager;
+    [SerializeField] private StackMiniGame_GameplayManager gameplayManager;
 
     [SerializeField] private Button stackButton;
     [SerializeField] private Button replayButton;
@@ -47,7 +47,7 @@ public class StackMinigameUI : MonoBehaviour
                 stackButton.gameObject.SetActive(item.StackButtonActive);
                 replayButton.gameObject.SetActive(item.ReplayButtonActive);
 
-                return;
+                break;
             }
         }
     }

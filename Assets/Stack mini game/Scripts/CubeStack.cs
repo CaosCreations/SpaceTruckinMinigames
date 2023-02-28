@@ -6,7 +6,7 @@ public class CubeStack : MonoBehaviour
 {
     [SerializeField] private CubeSpawner cubeSpawner;
 
-    [SerializeField] private GameplayManager gameplayManager;
+    [SerializeField] private StackMiniGame_GameplayManager gameplayManager;
 
     public CubeCornersPositionPile CubeCornersPositionPile { get; private set; } = new CubeCornersPositionPile();
 
@@ -35,12 +35,10 @@ public class CubeStack : MonoBehaviour
         }
 
         // The cubes are stacked, so there is some overlap
-        else
-        {
+
             float cubeOverlap = CubeCornersPositionPile.CubeCornersPositionList[1].transform.localScale.x
                                 - Mathf.Abs(bottomCubeLeftCornerXposition - topCubeLeftCornerXposition);
             return cubeOverlap;
-        }
     }
 
     private void AddTopCubeDataToPile(GameObject cube)

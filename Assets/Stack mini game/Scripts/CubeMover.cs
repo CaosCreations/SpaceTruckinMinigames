@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CubeMover : MonoBehaviour
 {
-    [SerializeField] private GameplayManager gameplayManager;
+    [SerializeField] private StackMiniGame_GameplayManager gameplayManager;
 
     [SerializeField] private CubeSpawner cubeSpawner;
 
