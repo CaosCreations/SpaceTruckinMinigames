@@ -305,9 +305,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2572d5741a6b8154da25c89b434c0d4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameplayManager: {fileID: 523459513}
   stackButton: {fileID: 1077119915}
   replayButton: {fileID: 1848687166}
   outcomeText: {fileID: 1492072829}
+  gameResultMessages:
+  - {fileID: 11400000, guid: b5b58b164ffcb9f4a9ed2bcd82ddf16f, type: 2}
+  - {fileID: 11400000, guid: e7f31afc73a80de4fb2a1e912dbdbc8d, type: 2}
+  - {fileID: 11400000, guid: 440f0732308d29b48ad758cf461e2e16, type: 2}
+  - {fileID: 11400000, guid: b95c8377deb01ad48b239f06fc2c75e8, type: 2}
 --- !u!1 &55187756
 GameObject:
   m_ObjectHideFlags: 0
@@ -333,6 +339,52 @@ Transform:
   m_GameObject: {fileID: 55187756}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -10.5, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 523459514}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &110137951
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 110137953}
+  - component: {fileID: 110137952}
+  m_Layer: 0
+  m_Name: Cube spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &110137952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110137951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8f953010109b2948ac2ff1c3e240c05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cubePrefab: {fileID: 9138576458730590876, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
+  cubeSpawnStartPosition: {fileID: 55187757}
+  cubeStack: {fileID: 1177137772}
+--- !u!4 &110137953
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110137951}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -10.5, y: 9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 523459514}
@@ -440,7 +492,7 @@ GameObject:
   - component: {fileID: 523459514}
   - component: {fileID: 523459513}
   m_Layer: 0
-  m_Name: Stack minigame manager
+  m_Name: Gameplay manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -455,14 +507,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 523459512}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e373757e784245846a49cd631bac1de1, type: 3}
+  m_Script: {fileID: 11500000, guid: 555848340cb35fe45940cf96f8ebaa6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxScore: 5
-  cubePrefab: {fileID: 9138576458730590876, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
-  cubeSpawnStartPosition: {fileID: 55187757}
-  stackButton: {fileID: 1077119915}
-  replayButton: {fileID: 1848687166}
+  cubeSpawner: {fileID: 110137952}
+  cubeStack: {fileID: 1177137772}
+  fullWinScore: 5
+  partialWinScore: 3
+  gameStates:
+    stateRegister: {fileID: 11400000, guid: 9bf82df3fc565f74d919ab3b17d651d6, type: 2}
 --- !u!4 &523459514
 Transform:
   m_ObjectHideFlags: 0
@@ -476,6 +529,8 @@ Transform:
   m_Children:
   - {fileID: 53942360}
   - {fileID: 1267509928}
+  - {fileID: 110137953}
+  - {fileID: 1177137773}
   - {fileID: 55187757}
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -738,6 +793,51 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 30, z: 3}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &1177137771
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1177137773}
+  - component: {fileID: 1177137772}
+  m_Layer: 0
+  m_Name: Cube stack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1177137772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1177137771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce03ca8f12bcce14693823af1245a201, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cubeSpawner: {fileID: 110137952}
+  gameplayManager: {fileID: 523459513}
+--- !u!4 &1177137773
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1177137771}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -10.5, y: 9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 523459514}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1267509926
 GameObject:
   m_ObjectHideFlags: 0
@@ -767,7 +867,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 729fa6f65e24ec34e8c49d9a1f377809, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentMovingCube: {fileID: 0}
+  gameplayManager: {fileID: 523459513}
+  cubeSpawner: {fileID: 110137952}
   movingSpeed: 5
 --- !u!4 &1267509928
 Transform:
