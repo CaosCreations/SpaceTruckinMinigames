@@ -14,9 +14,7 @@ public class GameState
 
     public void SetCurrentState(string newState)
     {
-        string result;
-
-        if(TryGetState(newState.ToLower().Trim(), out result) == true)
+        if(TryGetState(newState.ToLower().Trim(), out string result) == true)
                 CurrentState = result;
     }
 
