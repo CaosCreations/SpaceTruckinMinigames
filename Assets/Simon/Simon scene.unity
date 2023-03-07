@@ -326,7 +326,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.37328386, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -416,8 +416,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74220ed5d73c046439cc015e8856ed8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 0
-  <AudioClip>k__BackingField: {fileID: 8300000, guid: 1b69365a47cf02c4dace1d726d6340d0, type: 3}
+  gameLoopManager: {fileID: 1255709777}
+  colorButtonData: {fileID: 11400000, guid: 3832993b80037e949a78ca1dec21ed61, type: 2}
 --- !u!1 &512829324
 GameObject:
   m_ObjectHideFlags: 0
@@ -533,10 +533,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50398783da961ea40aaafb87068c522c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  greenButton: {fileID: 450656497}
-  redButton: {fileID: 756456104}
-  yellowButton: {fileID: 1829783688}
-  blueButton: {fileID: 1025249513}
   buttonHighlight: {fileID: 65345510}
 --- !u!82 &523080694
 AudioSource:
@@ -765,7 +761,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0.019385815, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -843,8 +839,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74220ed5d73c046439cc015e8856ed8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
-  <AudioClip>k__BackingField: {fileID: 8300000, guid: 7117bd83ce35e744198f51b47198e532, type: 3}
+  gameLoopManager: {fileID: 1255709777}
+  colorButtonData: {fileID: 11400000, guid: 4791f15ca28d3f34c997415afb8c3f67, type: 2}
 --- !u!1 &997892605
 GameObject:
   m_ObjectHideFlags: 0
@@ -944,7 +940,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.11664677, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1022,8 +1018,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74220ed5d73c046439cc015e8856ed8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 3
-  <AudioClip>k__BackingField: {fileID: 8300000, guid: 7d763457ed077ac46a153e578ae370c5, type: 3}
+  gameLoopManager: {fileID: 1255709777}
+  colorButtonData: {fileID: 11400000, guid: 463f87a324e802e43b90d0f7ff61f365, type: 2}
 --- !u!1 &1166231702
 GameObject:
   m_ObjectHideFlags: 0
@@ -1125,6 +1121,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0533ce1b5390eae4ab3c13cc0d10fbb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameState:
+    stateRegister: {fileID: 11400000, guid: 2a550105b7cce0e448629dda56e59da1, type: 2}
   startGameButton: {fileID: 1364631874}
   waitBetweenColorSequences: 0.5
 --- !u!4 &1255709778
@@ -1569,7 +1567,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.97558546, g: 1, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1647,8 +1645,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74220ed5d73c046439cc015e8856ed8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 2
-  <AudioClip>k__BackingField: {fileID: 8300000, guid: 5ec70624fb09a5643891bfc29765bace, type: 3}
+  gameLoopManager: {fileID: 1255709777}
+  colorButtonData: {fileID: 11400000, guid: 06656aee8b04939488555f9c17aea5ab, type: 2}
 --- !u!1 &1927076700
 GameObject:
   m_ObjectHideFlags: 0
@@ -1782,6 +1780,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a442009f558059418273db8a3f98bb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  allColorButtons:
+  - {fileID: 0}
+  - {fileID: 756456104}
+  - {fileID: 1829783688}
+  - {fileID: 1025249513}
 --- !u!4 &1997775836
 Transform:
   m_ObjectHideFlags: 0

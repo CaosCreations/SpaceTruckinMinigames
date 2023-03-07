@@ -34,5 +34,4 @@ public class GameState
         throw new ArgumentException("The state:" + state + ", you tried to get or set doesn't exist in the register. " +
                                             "Please check the spelling");
     }
-
 }

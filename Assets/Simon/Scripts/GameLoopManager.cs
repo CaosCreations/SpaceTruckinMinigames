@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class GameLoopManager : MonoBehaviour
 {
+    [SerializeField] private GameState gameState;
+
     [SerializeField] private Button startGameButton;
 
     [Range(0.5f, 2.0f)]
     [SerializeField] private float waitBetweenColorSequences;
-
-    private MiniGamePhases currentMiniGamePhases = MiniGamePhases.WatchingPhase;
 
     private Sequence sequence;
 
@@ -20,9 +20,10 @@ public class GameLoopManager : MonoBehaviour
 
     private int score = 0;
 
-
     private void Awake()
     {
+        gameState.SetCurrentState("watching phase");
+
         startGameButton.onClick.RemoveAllListeners();
         startGameButton.onClick.AddListener(StartGameLoop);
 
@@ -40,29 +41,29 @@ public class GameLoopManager : MonoBehaviour
     {
         score = 0;
         uiManager.ToggleGameOverUI(onOff: false);
-        sequence.CreateColorSequence(2);
+        sequence.CreateColorButtonSequence(2);
         yield return StartCoroutine(PlayColorSequenceCoroutine());
     }
 
     private IEnumerator PlayColorSequenceCoroutine()
     {
-        currentMiniGamePhases = MiniGamePhases.WatchingPhase;
-        yield return StartCoroutine(colorButtonEffectPlayer.PlayButtonSequence(sequence.ColorSequence));
-        currentMiniGamePhases = MiniGamePhases.PlayingPhase;
+        gameState.SetCurrentState("watching phase");
+        yield return StartCoroutine(colorButtonEffectPlayer.PlayButtonSequence(sequence.ColorButtonSequence));
+        gameState.SetCurrentState("playing phase");
     }
 
-    public IEnumerator SelectColor(Colors color)
+    public IEnumerator SelectColor(ColorButton colorButton)
     {
-        if (currentMiniGamePhases == MiniGamePhases.WatchingPhase)
+        if (gameState.CurrentState == "watching phase")
         {
             yield break;
         }
 
-        currentMiniGamePhases = MiniGamePhases.WatchingPhase;
-        yield return StartCoroutine(colorButtonEffectPlayer.PlayButtonAudioAndVisual(color));
-        currentMiniGamePhases = MiniGamePhases.PlayingPhase;
+        gameState.SetCurrentState("watching phase");
+        yield return StartCoroutine(colorButtonEffectPlayer.PlayButtonAudioAndVisual(colorButton));
+        gameState.SetCurrentState("playing phase");
 
-        if (!sequence.ColorIsSameAsCurrentSequenceColor(color))
+        if (!sequence.ColorButtonIsSameAsCurrentSequenceColor(colorButton))
         {
             GameOver();
             yield break;
@@ -75,7 +76,7 @@ public class GameLoopManager : MonoBehaviour
 
         if (sequence.SequenceReachedLastItem)
         {
-            currentMiniGamePhases = MiniGamePhases.WatchingPhase;
+            gameState.SetCurrentState("watching phase");
             score++;
             yield return new WaitForSeconds(waitBetweenColorSequences);
             StartCoroutine(SetNextRound());
@@ -84,14 +85,14 @@ public class GameLoopManager : MonoBehaviour
 
     private IEnumerator SetNextRound()
     {
-        sequence.ExtendColorSequence();
+        sequence.ExtendColorButtonSequence();
         sequence.ResetSequenceIndex();
         yield return StartCoroutine(PlayColorSequenceCoroutine());
     }
 
     private void GameOver()
     {
-        currentMiniGamePhases = MiniGamePhases.WatchingPhase;
+        gameState.SetCurrentState("watching phase");
 
         sequence.ResetSequenceIndex();
 
