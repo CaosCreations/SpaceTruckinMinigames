@@ -5,17 +5,27 @@ using UnityEngine.UI;
 
 public class ColorButton : MonoBehaviour
 {
-    [SerializeField] private Colors color;
-
-    [field: SerializeField]
     public AudioClip AudioClip { get; private set; }
+
+    public RectTransform Rectransform { get; private set; }
+
+    [SerializeField] private GameLoopManager gameLoopManager;
+
+    [SerializeField] private ColorButtonData colorButtonData;
 
     private Button button;
 
-    private GameLoopManager gameLoopManager;
+    private RawImage rawImage;
+
     private void Awake()
     {
-        gameLoopManager = GameObject.FindObjectOfType<GameLoopManager>();
+        AudioClip = colorButtonData.AudioClip;
+
+        Rectransform = GetComponent<RectTransform>();
+
+        rawImage = GetComponent<RawImage>();
+        rawImage.color= colorButtonData.Color;
+
         button = GetComponent<Button>();
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(PlayButton);
@@ -23,6 +33,6 @@ public class ColorButton : MonoBehaviour
 
     public void PlayButton()
     {
-       StartCoroutine(gameLoopManager.SelectColor(color));
+       StartCoroutine(gameLoopManager.SelectColor(this));
     }
 }

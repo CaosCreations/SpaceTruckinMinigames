@@ -14,9 +14,7 @@ public class GameState
 
     public void SetCurrentState(string newState)
     {
-        string result;
-
-        if(TryGetState(newState.ToLower().Trim(), out result) == true)
+        if(TryGetState(newState.ToLower().Trim(), out string result) == true)
                 CurrentState = result;
     }
 
@@ -36,5 +34,4 @@ public class GameState
         throw new ArgumentException("The state:" + state + ", you tried to get or set doesn't exist in the register. " +
                                             "Please check the spelling");
     }
-
 }

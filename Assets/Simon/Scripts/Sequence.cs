@@ -5,24 +5,24 @@ using System;
 
 public class Sequence : MonoBehaviour
 {
-    public List<Colors> ColorSequence { get; private set; }
+    public List<ColorButton> ColorButtonSequence { get; private set; }
 
-    private Colors[] allColors = (Colors[])Enum.GetValues(typeof(Colors));
+    [SerializeField] private ColorButton[] allColorButtons;
 
     private int sequenceIndex = 0;
 
-    public void CreateColorSequence(int sequenceLength)
+    public void CreateColorButtonSequence(int sequenceLength)
     {
         if(sequenceLength <= 0)
         {
             Debug.LogError("The length of the sequence should be larger than 0");
         }
 
-        ColorSequence = new List<Colors>();
+        ColorButtonSequence = new List<ColorButton>();
 
         for(int i = 0; i < sequenceLength; i++)
         {
-            ExtendColorSequence();
+            ExtendColorButtonSequence();
         }
     }
 
@@ -31,25 +31,25 @@ public class Sequence : MonoBehaviour
        sequenceIndex++;
     }
 
-    public bool SequenceReachedLastItem => sequenceIndex >= ColorSequence.Count;
+    public bool SequenceReachedLastItem => sequenceIndex >= ColorButtonSequence.Count;
 
     public void ResetSequenceIndex()
     {
         sequenceIndex = 0;
     }
 
-    private Colors GetRandomColor()
+    private ColorButton GetRandomColorButton()
     {
-        return allColors[UnityEngine.Random.Range(0, allColors.Length)];
+        return allColorButtons[UnityEngine.Random.Range(0, allColorButtons.Length)];
     }
 
-    public void ExtendColorSequence()
+    public void ExtendColorButtonSequence()
     {
-        ColorSequence.Add(GetRandomColor());
+        ColorButtonSequence.Add(GetRandomColorButton());
     }
 
-    public bool ColorIsSameAsCurrentSequenceColor(Colors color)
+    public bool ColorButtonIsSameAsCurrentSequenceColor(ColorButton colorButton)
     {
-        return color == ColorSequence[sequenceIndex];
+        return colorButton == ColorButtonSequence[sequenceIndex];
     }
 }

@@ -4,38 +4,14 @@ using UnityEngine;
 
 public class ColorButtonEffectPlayer : MonoBehaviour
 {
-    [SerializeField] private ColorButton greenButton;
-    [SerializeField] private ColorButton redButton;
-    [SerializeField] private ColorButton yellowButton;
-    [SerializeField] private ColorButton blueButton;
-
     [SerializeField] private Transform buttonHighlight;
 
     private AudioSource audioSource;
-
-    private Dictionary<Colors, Transform> colorButtonPositions;
-
-    private Dictionary<Colors, AudioClip> colorButtonSounds;
 
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
 
-        colorButtonPositions = new Dictionary<Colors, Transform>
-        {
-            { Colors.Green, greenButton.transform },
-            { Colors.Red, redButton.transform },
-            { Colors.Yellow, yellowButton.transform },
-            { Colors.Blue, blueButton.transform }
-        };
-
-        colorButtonSounds = new Dictionary<Colors, AudioClip>
-        {
-            { Colors.Green, greenButton.AudioClip },
-            { Colors.Red, redButton.AudioClip },
-            { Colors.Yellow, yellowButton.AudioClip },
-            { Colors.Blue, blueButton.AudioClip }
-        };
     }
 
     private void ToggleButtonHighlight()
@@ -43,13 +19,13 @@ public class ColorButtonEffectPlayer : MonoBehaviour
         buttonHighlight.gameObject.SetActive(!buttonHighlight.gameObject.activeSelf);
     }
 
-    public IEnumerator PlayButtonAudioAndVisual(Colors color)
+    public IEnumerator PlayButtonAudioAndVisual(ColorButton colorButton)
     {
         ToggleButtonHighlight();
 
-        buttonHighlight.position = colorButtonPositions[color].position;
+        buttonHighlight.position = colorButton.Rectransform.position;
 
-        audioSource.clip = colorButtonSounds[color];
+        audioSource.clip = colorButton.AudioClip;
 
         audioSource.Play();
 
@@ -60,20 +36,11 @@ public class ColorButtonEffectPlayer : MonoBehaviour
         yield return new WaitForSeconds(0.15f);
     }
 
-    public IEnumerator PlayButtonSequence(List<Colors> colorList)
+    public IEnumerator PlayButtonSequence(List<ColorButton> colorButtons)
     {
-        foreach (Colors color in colorList)
+        foreach (ColorButton colorButton in colorButtons)
         {
-            yield return StartCoroutine(PlayButtonAudioAndVisual(color));
+            yield return StartCoroutine(PlayButtonAudioAndVisual(colorButton));
         }
     }
-
-}
-
-public enum Colors
-{
-    Green,
-    Red,
-    Yellow,
-    Blue
 }
