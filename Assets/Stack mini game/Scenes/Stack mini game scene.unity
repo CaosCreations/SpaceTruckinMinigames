@@ -510,7 +510,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 555848340cb35fe45940cf96f8ebaa6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stackFreezeTime: 0.25
   cubeSpawner: {fileID: 110137952}
   cubeMover: {fileID: 1267509927}
   cubeStack: {fileID: 1177137772}
@@ -518,6 +517,7 @@ MonoBehaviour:
   partialWinScore: 3
   gameStates:
     stateRegister: {fileID: 11400000, guid: 9bf82df3fc565f74d919ab3b17d651d6, type: 2}
+  stackFreezeTime: 0.25
 --- !u!4 &523459514
 Transform:
   m_ObjectHideFlags: 0
@@ -870,8 +870,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameplayManager: {fileID: 523459513}
+  cubeStack: {fileID: 1177137772}
   cubeSpawner: {fileID: 110137952}
-  movingSpeed: 5
+  normalMovingSpeed: 20
+  slowMovingSpeed: 10
+  slowDownDistanceThreshold: 3
 --- !u!4 &1267509928
 Transform:
   m_ObjectHideFlags: 0

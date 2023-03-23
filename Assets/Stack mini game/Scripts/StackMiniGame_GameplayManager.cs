@@ -6,11 +6,6 @@ using UnityEngine.UI;
 
 public class StackMiniGame_GameplayManager : MonoBehaviour
 {
-    [Header("Game feel")]
-
-    [Range(0.0f, 2f)]
-    [SerializeField] private float stackFreezeTime;
-
     [Header("Dependencies")]
     [SerializeField] private CubeSpawner cubeSpawner;
 
@@ -23,6 +18,11 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
     [SerializeField] private int partialWinScore;
 
     [SerializeField] private GameState gameStates;
+
+    [Header("Gameplay")]
+
+    [Range(0.0f, 2f)]
+    [SerializeField] private float stackFreezeTime;
 
     public GameState GameStates => gameStates;
 

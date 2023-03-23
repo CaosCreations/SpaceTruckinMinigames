@@ -4,13 +4,23 @@ using UnityEngine;
 
 public class CubeMover : MonoBehaviour
 {
+    [Header("Dependencies")]
+
     [SerializeField] private StackMiniGame_GameplayManager gameplayManager;
+
+    [SerializeField] private CubeStack cubeStack;
 
     [SerializeField] private CubeSpawner cubeSpawner;
 
     private Transform currentMovingCube;
 
-    [SerializeField] private float movingSpeed;
+    [Header("Gameplay")]
+    [Range(0.01f, 100f)]
+    [SerializeField] private float normalMovingSpeed;
+    [Range(0.01f, 100f)]
+    [SerializeField] private float slowMovingSpeed;
+    [Range(0.0f, 15f)]
+    [SerializeField] private float slowDownDistanceThreshold;
 
     private float direction = 1;
 
@@ -33,7 +43,7 @@ public class CubeMover : MonoBehaviour
 
     private void Update()
     {
-        MoveCube();
+        Temp();
     }
 
     public void ChangeDirection()
@@ -41,10 +51,29 @@ public class CubeMover : MonoBehaviour
         direction *= -1;
     }
 
-    private void MoveCube()
+    private void Temp()
     {
-        if(currentMovingCube != null && canMoveCube == true)
-            currentMovingCube.position += new Vector3(movingSpeed * 5 * Time.deltaTime, 0f, 0f) * direction;
+        if(currentMovingCube == null || canMoveCube == false)
+           return;
+
+        if (cubeStack.StackedCubes.Count == 1)
+        {
+            MoveCube(normalMovingSpeed);
+            return;
+        }
+
+        float cubesDistance = Mathf.Abs(cubeStack.StackedCubes[cubeStack.StackedCubes.Count - 2].transform.position.x - currentMovingCube.position.x);
+
+        if (cubesDistance <= slowDownDistanceThreshold)
+            MoveCube(slowMovingSpeed);
+
+        else
+            MoveCube(normalMovingSpeed);
+    }
+
+    private void MoveCube(float speed)
+    {
+        currentMovingCube.position += new Vector3(speed * Time.deltaTime, 0f, 0f) * direction;
     }
 
     private void ToggleMoveCube(bool onOff)
