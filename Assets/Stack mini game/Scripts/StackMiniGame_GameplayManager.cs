@@ -11,18 +11,23 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
 
     [SerializeField] private CubeMover cubeMover;
 
+    [SerializeField] private ScreenShaker screenShaker;
+
     [SerializeField] private CubeStack cubeStack;
-
-    [SerializeField] private int fullWinScore;
-
-    [SerializeField] private int partialWinScore;
 
     [SerializeField] private GameState gameStates;
 
     [Header("Gameplay")]
 
     [Range(0.0f, 2f)]
-    [SerializeField] private float stackFreezeTime;
+    [SerializeField] private float stackFreezeSeconds;
+
+    [Range(0.0f, 2f)]
+    [SerializeField] private float screenShakeSeconds;
+
+    [SerializeField] private int fullWinScore;
+
+    [SerializeField] private int partialWinScore;
 
     public GameState GameStates => gameStates;
 
@@ -47,6 +52,9 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
         // There is only one cube at the beginning. The player can place it wherever. There is no cutting involved yet.
         if (cubeStack.CubeCornersPositionPile.CubeCornersPositionList.Count == 1)
         {
+            screenShaker.ShakeScreen(seconds: screenShakeSeconds);
+            yield return StartCoroutine(cubeMover.FreezeCubeMovement(stackFreezeSeconds));
+
             cubeSpawner.SpawnStackedCube(spawnPosition: cubeStack.CubeCornersPositionPile.CubeCornersPositionList[0].transform.position,
                                          setWidth: cubeStack.CubeCornersPositionPile.CubeCornersPositionList[0].transform.localScale.x);
 
@@ -73,7 +81,8 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
         // was sticking out is now aligned with that of the bottom cube
         cubeSpawner.CutCube(topCubeCornerPosition, bottomCubeCornerPosition);
 
-        yield return StartCoroutine(cubeMover.FreezeCubeMovement(stackFreezeTime));
+        screenShaker.ShakeScreen(seconds: screenShakeSeconds);
+        yield return StartCoroutine(cubeMover.FreezeCubeMovement(stackFreezeSeconds));
 
         // Only spawn next top cube if the stack hasn't reached to top rank yet
         if (cubeStack.StackedCubes.Count >= fullWinScore)

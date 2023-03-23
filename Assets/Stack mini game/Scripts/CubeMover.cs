@@ -22,6 +22,8 @@ public class CubeMover : MonoBehaviour
     [Range(0.0f, 15f)]
     [SerializeField] private float slowDownDistanceThreshold;
 
+    private float currentMovingSpeed = 0f;
+
     private float direction = 1;
 
     private bool canMoveCube;
@@ -43,7 +45,8 @@ public class CubeMover : MonoBehaviour
 
     private void Update()
     {
-        Temp();
+        SetMovingSpeed();
+        MoveCube();
     }
 
     public void ChangeDirection()
@@ -51,29 +54,27 @@ public class CubeMover : MonoBehaviour
         direction *= -1;
     }
 
-    private void Temp()
+    private void SetMovingSpeed()
     {
-        if(currentMovingCube == null || canMoveCube == false)
-           return;
-
         if (cubeStack.StackedCubes.Count == 1)
         {
-            MoveCube(normalMovingSpeed);
+            currentMovingSpeed = normalMovingSpeed;
             return;
         }
 
         float cubesDistance = Mathf.Abs(cubeStack.StackedCubes[cubeStack.StackedCubes.Count - 2].transform.position.x - currentMovingCube.position.x);
 
         if (cubesDistance <= slowDownDistanceThreshold)
-            MoveCube(slowMovingSpeed);
+            currentMovingSpeed = slowMovingSpeed;
 
         else
-            MoveCube(normalMovingSpeed);
+            currentMovingSpeed = normalMovingSpeed;
     }
 
-    private void MoveCube(float speed)
+    private void MoveCube()
     {
-        currentMovingCube.position += new Vector3(speed * Time.deltaTime, 0f, 0f) * direction;
+        if (currentMovingCube != null && canMoveCube == true)
+            currentMovingCube.position += new Vector3(currentMovingSpeed * Time.deltaTime, 0f, 0f) * direction;
     }
 
     private void ToggleMoveCube(bool onOff)
