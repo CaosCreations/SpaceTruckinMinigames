@@ -25,7 +25,7 @@ public class StackMinigameUI : MonoBehaviour
         }
 
         stackButton.onClick.RemoveAllListeners();
-        stackButton.onClick.AddListener(gameplayManager.DoPlayButton);
+        stackButton.onClick.AddListener(() => StartCoroutine(gameplayManager.DoPlayButton()));
 
         replayButton.onClick.RemoveAllListeners();
         replayButton.onClick.AddListener(gameplayManager.ResetGame);

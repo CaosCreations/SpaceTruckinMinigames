@@ -6,7 +6,15 @@ using UnityEngine.UI;
 
 public class StackMiniGame_GameplayManager : MonoBehaviour
 {
+    [Header("Game feel")]
+
+    [Range(0.0f, 2f)]
+    [SerializeField] private float stackFreezeTime;
+
+    [Header("Dependencies")]
     [SerializeField] private CubeSpawner cubeSpawner;
+
+    [SerializeField] private CubeMover cubeMover;
 
     [SerializeField] private CubeStack cubeStack;
 
@@ -32,7 +40,7 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
     // If the cubes are stacked, the game goes on, and we spawn a new cube on top
     // If not it's game over
 
-    public void DoPlayButton()
+    public IEnumerator DoPlayButton()
     {
         CubeCornersPositionTracker topCubeCornerPosition = cubeStack.CubeCornersPositionPile.CubeCornersPositionList[0];
 
@@ -42,7 +50,7 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
             cubeSpawner.SpawnStackedCube(spawnPosition: cubeStack.CubeCornersPositionPile.CubeCornersPositionList[0].transform.position,
                                          setWidth: cubeStack.CubeCornersPositionPile.CubeCornersPositionList[0].transform.localScale.x);
 
-            return;
+            yield break;
         }
 
         float cubeOverlapDistance = cubeStack.CubesOverlapDistance();
@@ -57,7 +65,7 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
                 gameStates.SetCurrentState("lose");
 
             GameEndEvent?.Invoke();
-            return;
+            yield break;
         }
 
         // Cubes are stacked
@@ -65,12 +73,14 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
         // was sticking out is now aligned with that of the bottom cube
         cubeSpawner.CutCube(topCubeCornerPosition, bottomCubeCornerPosition);
 
+        yield return StartCoroutine(cubeMover.FreezeCubeMovement(stackFreezeTime));
+
         // Only spawn next top cube if the stack hasn't reached to top rank yet
         if (cubeStack.StackedCubes.Count >= fullWinScore)
         {
             gameStates.SetCurrentState("full win");
             GameEndEvent?.Invoke();
-            return;
+            yield break;
         }
 
         cubeSpawner.SpawnStackedCube(spawnPosition: bottomCubeCornerPosition.transform.position, setWidth: cubeOverlapDistance);

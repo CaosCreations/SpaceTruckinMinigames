@@ -510,7 +510,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 555848340cb35fe45940cf96f8ebaa6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stackFreezeTime: 0.25
   cubeSpawner: {fileID: 110137952}
+  cubeMover: {fileID: 1267509927}
   cubeStack: {fileID: 1177137772}
   fullWinScore: 5
   partialWinScore: 3

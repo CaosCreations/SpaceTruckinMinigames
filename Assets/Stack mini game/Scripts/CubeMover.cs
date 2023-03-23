@@ -52,6 +52,16 @@ public class CubeMover : MonoBehaviour
         canMoveCube = onOff;
     }
 
+    public IEnumerator FreezeCubeMovement(float seconds)
+    {
+        ToggleMoveCube(false);
+
+        yield return new WaitForSeconds(seconds);
+
+        ToggleMoveCube(true);
+    }
+
+
     private void SetMovingCube(GameObject cube)
     {
         currentMovingCube = cube.transform;
