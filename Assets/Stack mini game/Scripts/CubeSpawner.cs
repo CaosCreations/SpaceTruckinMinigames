@@ -13,6 +13,17 @@ public class CubeSpawner : MonoBehaviour
 
     public Action<GameObject> CubeSpawnedEvent;
 
+
+    [Range(2, 20)]
+    [SerializeField] private int cubeDivisions = 3;
+
+    private float cubeDivisionWidth;
+
+    private void Awake()
+    {
+        cubeDivisionWidth = cubePrefab.transform.localScale.x / cubeDivisions;
+    }
+
     public void SpawnBottomCube()
     {
         GameObject spawnedCube = Instantiate(cubePrefab, cubeSpawnStartPosition.position, Quaternion.identity);
@@ -33,28 +44,64 @@ public class CubeSpawner : MonoBehaviour
         CubeSpawnedEvent.Invoke(spawnedCube);
     }
 
-    public void CutCube(CubeCornersPositionTracker topCubeCornerPosition, CubeCornersPositionTracker bottomCubeCornerPosition)
+    public void CutCube(CubeCornersPositionTracker topCubeCornerPosition, CubeCornersPositionTracker bottomCubeCornerPosition, CubeOverlap cubeOverlap)
     {
-        float XspawnPosition;
+        float topCornerX = 0f;
 
-        float width = cubeStack.CubesOverlapDistance();
+        float bottomCornerX = 0f;
 
-        // Top cube to the left of bottom cube
-        if (bottomCubeCornerPosition.GetLeftCornerPosition() < topCubeCornerPosition.GetLeftCornerPosition())
+        if(cubeOverlap == CubeOverlap.Right)
         {
-            XspawnPosition = topCubeCornerPosition.GetLeftCornerPosition() + width / 2;
+            topCornerX = topCubeCornerPosition.GetLeftCornerPosition();
+            bottomCornerX = bottomCubeCornerPosition.GetRightCornerPosition();
         }
 
-        // Top cube to the right of bottom cube
-        else
+        else if(cubeOverlap == CubeOverlap.Left) 
         {
-            XspawnPosition = bottomCubeCornerPosition.GetLeftCornerPosition() + width / 2;
+            topCornerX = topCubeCornerPosition.GetRightCornerPosition();
+            bottomCornerX = bottomCubeCornerPosition.GetLeftCornerPosition();
         }
 
         // Cutting off the current top cube (moving and resizing it)
 
-        bottomCubeCornerPosition.transform.position = new Vector3(XspawnPosition, bottomCubeCornerPosition.transform.position.y, bottomCubeCornerPosition.transform.position.z);
+        float roundedCutWidth = GetRoundedCutWidth(topCornerX, bottomCornerX);
 
-        bottomCubeCornerPosition.transform.localScale = new Vector3(width, bottomCubeCornerPosition.transform.localScale.y, bottomCubeCornerPosition.transform.localScale.z);
+        float newXCubePosition = 0f;
+
+        if (cubeOverlap == CubeOverlap.Right)
+        {
+            newXCubePosition = (bottomCornerX + (bottomCornerX - roundedCutWidth)) / 2;
+        }
+
+        else if(cubeOverlap == CubeOverlap.Left)
+        {
+            newXCubePosition = (bottomCornerX + (bottomCornerX + roundedCutWidth)) / 2;
+        }
+
+        topCubeCornerPosition.transform.position = new Vector3(newXCubePosition, topCubeCornerPosition.transform.position.y, topCubeCornerPosition.transform.position.z);
+        topCubeCornerPosition.transform.localScale = new Vector3(roundedCutWidth, topCubeCornerPosition.transform.localScale.y, topCubeCornerPosition.transform.localScale.z);
+
+        // Cutting off the current top cube (moving and resizing it)
+
+        //bottomCubeCornerPosition.transform.position = new Vector3(XspawnPosition, bottomCubeCornerPosition.transform.position.y, bottomCubeCornerPosition.transform.position.z);
+
+        //bottomCubeCornerPosition.transform.localScale = new Vector3(width, bottomCubeCornerPosition.transform.localScale.y, bottomCubeCornerPosition.transform.localScale.z);
     }
+
+    // Start from the top corner and go to the bottom corner (where the cut occurs) in increments
+    private float GetRoundedCutWidth(float topCornerX, float bottomCornerX)
+    {
+        float result = 0f;
+
+        float totalDistance = Mathf.Abs(topCornerX - bottomCornerX);
+
+        while(result < totalDistance)
+        {
+            result += cubeDivisionWidth;
+        }
+
+        return result;
+    }
+
+
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class CubeStack : MonoBehaviour
@@ -19,26 +20,27 @@ public class CubeStack : MonoBehaviour
         gameplayManager.GameResetEvent += Reset;
     }
 
-    public float CubesOverlapDistance()
+    public CubeOverlap GetCubeOverlap()
     {
-        float topCubeLeftCornerXposition = CubeCornersPositionPile.CubeCornersPositionList[0].GetLeftCornerPosition();
-        float topCubeRightCornerXposition = CubeCornersPositionPile.CubeCornersPositionList[0].GetRightCornerPosition();
-        float bottomCubeLeftCornerXposition = CubeCornersPositionPile.CubeCornersPositionList[1].GetLeftCornerPosition();
-        float bottomCubeRightCornerXposition = CubeCornersPositionPile.CubeCornersPositionList[1].GetRightCornerPosition();
+        float topCubeLeftCornerXposition = CubeCornersPositionPile.TopCube.GetLeftCornerPosition();
+        float topCubeRightCornerXposition = CubeCornersPositionPile.TopCube.GetRightCornerPosition();
+        float bottomCubeLeftCornerXposition = CubeCornersPositionPile.BottomCube.GetLeftCornerPosition();
+        float bottomCubeRightCornerXposition = CubeCornersPositionPile.BottomCube.GetRightCornerPosition();
 
         // If the corners are this far apart, it can only mean that top and bottom cubes are not stacked on top of each other,
         // so there is no overlap
-        if (topCubeLeftCornerXposition > bottomCubeRightCornerXposition ||
-            topCubeRightCornerXposition < bottomCubeLeftCornerXposition)
+        if ((topCubeRightCornerXposition < bottomCubeLeftCornerXposition)
+            || topCubeLeftCornerXposition > bottomCubeRightCornerXposition)
         {
-            return 0;
+            return CubeOverlap.None;
         }
 
-        // The cubes are stacked, so there is some overlap
+        if(bottomCubeRightCornerXposition < topCubeRightCornerXposition )
+        {
+            return CubeOverlap.Right;
+        }
 
-            float cubeOverlap = CubeCornersPositionPile.CubeCornersPositionList[1].transform.localScale.x
-                                - Mathf.Abs(bottomCubeLeftCornerXposition - topCubeLeftCornerXposition);
-            return cubeOverlap;
+        return CubeOverlap.Left;
     }
 
     private void AddTopCubeDataToPile(GameObject cube)
@@ -58,4 +60,11 @@ public class CubeStack : MonoBehaviour
 
         CubeCornersPositionPile.ResetPile();
     }
+}
+
+public enum CubeOverlap
+{
+    None,
+    Left,
+    Right
 }

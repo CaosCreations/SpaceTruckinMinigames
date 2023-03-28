@@ -47,25 +47,27 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
 
     public IEnumerator DoPlayButton()
     {
-        CubeCornersPositionTracker topCubeCornerPosition = cubeStack.CubeCornersPositionPile.CubeCornersPositionList[0];
+        CubeCornersPositionTracker bottomCube = cubeStack.CubeCornersPositionPile.BottomCube;
 
         // There is only one cube at the beginning. The player can place it wherever. There is no cutting involved yet.
-        if (cubeStack.CubeCornersPositionPile.CubeCornersPositionList.Count == 1)
+        if (cubeStack.CubeCornersPositionPile.TopCube == null)
         {
             screenShaker.ShakeScreen(seconds: screenShakeSeconds);
             yield return StartCoroutine(cubeMover.FreezeCubeMovement(stackFreezeSeconds));
 
-            cubeSpawner.SpawnStackedCube(spawnPosition: cubeStack.CubeCornersPositionPile.CubeCornersPositionList[0].transform.position,
-                                         setWidth: cubeStack.CubeCornersPositionPile.CubeCornersPositionList[0].transform.localScale.x);
+            cubeSpawner.SpawnStackedCube(spawnPosition: bottomCube.transform.position,
+                                         setWidth: bottomCube.transform.localScale.x);
 
             yield break;
         }
 
-        float cubeOverlapDistance = cubeStack.CubesOverlapDistance();
-        CubeCornersPositionTracker bottomCubeCornerPosition = cubeStack.CubeCornersPositionPile.CubeCornersPositionList[1];
+        CubeCornersPositionTracker topCube = cubeStack.CubeCornersPositionPile.TopCube;
+
+        CubeOverlap cubeOverlap = cubeStack.GetCubeOverlap();
+
 
         // Cubes aren't stacked. It's game over
-        if (cubeOverlapDistance == 0f)
+        if (cubeOverlap == CubeOverlap.None)
         {
             if(cubeStack.StackedCubes.Count >= partialWinScore+1)
                 gameStates.SetCurrentState("partial win");
@@ -79,7 +81,7 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
         // Cubes are stacked
         // we cut part of the top cube so that its side that
         // was sticking out is now aligned with that of the bottom cube
-        cubeSpawner.CutCube(topCubeCornerPosition, bottomCubeCornerPosition);
+        cubeSpawner.CutCube(topCube, bottomCube, cubeOverlap);
 
         screenShaker.ShakeScreen(seconds: screenShakeSeconds);
         yield return StartCoroutine(cubeMover.FreezeCubeMovement(stackFreezeSeconds));
@@ -92,7 +94,7 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
             yield break;
         }
 
-        cubeSpawner.SpawnStackedCube(spawnPosition: bottomCubeCornerPosition.transform.position, setWidth: cubeOverlapDistance);
+        cubeSpawner.SpawnStackedCube(spawnPosition: topCube.transform.position, setWidth: topCube.transform.localScale.x);
     }
 
     public void ResetGame()
