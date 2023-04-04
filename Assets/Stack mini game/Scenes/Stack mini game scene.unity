@@ -375,8 +375,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cubePrefab: {fileID: 9138576458730590876, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
   cubeSpawnStartPosition: {fileID: 55187757}
-  cubeStack: {fileID: 1177137772}
-  cubeDivisions: 1000
+  cubeDivisions: 5
 --- !u!4 &110137953
 Transform:
   m_ObjectHideFlags: 0
@@ -482,6 +481,50 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7412891170837196576, guid: 42bb2be31e75d1c44997acca6eea284d, type: 3}
   m_PrefabInstance: {fileID: 2594181343745027095}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &518680926
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 518680928}
+  - component: {fileID: 518680927}
+  m_Layer: 0
+  m_Name: Controls
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &518680927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 518680926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c3107b6f0eb9794d81d7184bcde92b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameplayManager: {fileID: 523459513}
+--- !u!4 &518680928
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 518680926}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.4846548, y: -2.25, z: -29.90776}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &523459512
 GameObject:
   m_ObjectHideFlags: 0

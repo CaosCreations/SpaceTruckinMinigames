@@ -35,6 +35,8 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
 
     public Action GameEndEvent;
 
+    private IEnumerator stackCoroutine;
+
 
     private void Start()
     {
@@ -45,7 +47,16 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
     // If the cubes are stacked, the game goes on, and we spawn a new cube on top
     // If not it's game over
 
-    public IEnumerator DoPlayButton()
+    public void StackCube()
+    {
+        if (stackCoroutine != null)
+            return;
+
+        stackCoroutine = StackCubeCoroutine();
+        StartCoroutine(stackCoroutine);
+    }
+
+    private IEnumerator StackCubeCoroutine()
     {
         CubeCornersPositionTracker bottomCube = cubeStack.CubeCornersPositionPile.BottomCube;
 
@@ -57,6 +68,7 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
 
             cubeSpawner.SpawnStackedCube(spawnPosition: bottomCube.transform.position,
                                          setWidth: bottomCube.transform.localScale.x);
+            stackCoroutine = null;
             yield break;
         }
 
@@ -73,6 +85,7 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
                 gameStates.SetCurrentState("lose");
 
             GameEndEvent?.Invoke();
+            stackCoroutine = null;
             yield break;
         }
 
@@ -89,10 +102,12 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
         {
             gameStates.SetCurrentState("full win");
             GameEndEvent?.Invoke();
+            stackCoroutine = null;
             yield break;
         }
 
         cubeSpawner.SpawnStackedCube(spawnPosition: topCube.transform.position, setWidth: topCube.transform.localScale.x);
+        stackCoroutine = null;
     }
 
     public void ResetGame()

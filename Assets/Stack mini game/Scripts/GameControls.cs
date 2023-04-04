@@ -15,7 +15,7 @@ public class GameControls : MonoBehaviour
     {
         if(Input.GetKeyDown("space"))
         {
-            StartCoroutine(gameplayManager.DoPlayButton());
+            gameplayManager.StackCube();
         }
     }
 }
