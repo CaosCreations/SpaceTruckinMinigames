@@ -376,6 +376,7 @@ MonoBehaviour:
   cubePrefab: {fileID: 9138576458730590876, guid: 40ac431a5d87f0e47b05299170c9de36, type: 3}
   cubeSpawnStartPosition: {fileID: 55187757}
   cubeStack: {fileID: 1177137772}
+  cubeDivisions: 1000
 --- !u!4 &110137953
 Transform:
   m_ObjectHideFlags: 0

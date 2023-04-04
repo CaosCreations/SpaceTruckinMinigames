@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CubeSpawner : MonoBehaviour
@@ -8,8 +6,6 @@ public class CubeSpawner : MonoBehaviour
     [SerializeField] private GameObject cubePrefab;
 
     [SerializeField] private Transform cubeSpawnStartPosition;
-
-    [SerializeField] private CubeStack cubeStack;
 
     public Action<GameObject> CubeSpawnedEvent;
 
@@ -44,64 +40,66 @@ public class CubeSpawner : MonoBehaviour
         CubeSpawnedEvent.Invoke(spawnedCube);
     }
 
+
+    /// <summary>
+    /// The cubes are divided in several parts of equal width, and cuts include a set number of complete parts.
+    /// Following that logic, the more the cube divisions, the harder the game, because it is harder to get the timing right to stack smaller parts.
+    /// On the one hand, it becomes easy for the player to do perfect stacks, on the other hand it sets a minimum width for the cube,
+    /// making it easy to stack it.
+    /// </summary>
+
     public void CutCube(CubeCornersPositionTracker topCubeCornerPosition, CubeCornersPositionTracker bottomCubeCornerPosition, CubeOverlap cubeOverlap)
     {
-        float topCornerX = 0f;
+        float topCornerXPosition = GetTopCornerPosition(topCubeCornerPosition, cubeOverlap);
 
-        float bottomCornerX = 0f;
+        float bottomCornerXPosition = GetBottomCornerPosition(bottomCubeCornerPosition, cubeOverlap);
 
-        if(cubeOverlap == CubeOverlap.Right)
-        {
-            topCornerX = topCubeCornerPosition.GetLeftCornerPosition();
-            bottomCornerX = bottomCubeCornerPosition.GetRightCornerPosition();
-        }
+        float roundedCutWidth = GetRoundedCutWidth(topCornerXPosition, bottomCornerXPosition);
 
-        else if(cubeOverlap == CubeOverlap.Left) 
-        {
-            topCornerX = topCubeCornerPosition.GetRightCornerPosition();
-            bottomCornerX = bottomCubeCornerPosition.GetLeftCornerPosition();
-        }
+        ResizeCutCube(topCubeCornerPosition, cubeOverlap, bottomCornerXPosition, roundedCutWidth);
+    }
 
-        // Cutting off the current top cube (moving and resizing it)
+    private float GetTopCornerPosition(CubeCornersPositionTracker topCubeCornerPosition, CubeOverlap cubeOverlap)
+    {
+        if (cubeOverlap == CubeOverlap.Right)
+            return topCubeCornerPosition.GetLeftCornerPosition();
 
-        float roundedCutWidth = GetRoundedCutWidth(topCornerX, bottomCornerX);
+        else
+            return topCubeCornerPosition.GetRightCornerPosition();
+    }
 
+    private float GetBottomCornerPosition(CubeCornersPositionTracker bottomCubeCornerPosition, CubeOverlap cubeOverlap)
+    {
+        if (cubeOverlap == CubeOverlap.Right)
+            return bottomCubeCornerPosition.GetRightCornerPosition();
+
+        else
+            return bottomCubeCornerPosition.GetLeftCornerPosition();
+    }
+
+    private float GetRoundedCutWidth(float topCornerX, float bottomCornerX)
+    {
+        float cutWidth = 0f;
+
+        float distanceBetweenCubes = Mathf.Abs(topCornerX - bottomCornerX);
+
+        while(cutWidth < distanceBetweenCubes)
+            cutWidth += cubeDivisionWidth;
+
+        return cutWidth;
+    }
+
+    private void ResizeCutCube(CubeCornersPositionTracker topCubeCornerPosition, CubeOverlap cubeOverlap, float bottomCornerXPosition, float roundedCutWidth)
+    {
         float newXCubePosition = 0f;
 
         if (cubeOverlap == CubeOverlap.Right)
-        {
-            newXCubePosition = (bottomCornerX + (bottomCornerX - roundedCutWidth)) / 2;
-        }
+            newXCubePosition = (bottomCornerXPosition + (bottomCornerXPosition - roundedCutWidth)) / 2;
 
-        else if(cubeOverlap == CubeOverlap.Left)
-        {
-            newXCubePosition = (bottomCornerX + (bottomCornerX + roundedCutWidth)) / 2;
-        }
+        else if (cubeOverlap == CubeOverlap.Left)
+            newXCubePosition = (bottomCornerXPosition + (bottomCornerXPosition + roundedCutWidth)) / 2;
 
         topCubeCornerPosition.transform.position = new Vector3(newXCubePosition, topCubeCornerPosition.transform.position.y, topCubeCornerPosition.transform.position.z);
         topCubeCornerPosition.transform.localScale = new Vector3(roundedCutWidth, topCubeCornerPosition.transform.localScale.y, topCubeCornerPosition.transform.localScale.z);
-
-        // Cutting off the current top cube (moving and resizing it)
-
-        //bottomCubeCornerPosition.transform.position = new Vector3(XspawnPosition, bottomCubeCornerPosition.transform.position.y, bottomCubeCornerPosition.transform.position.z);
-
-        //bottomCubeCornerPosition.transform.localScale = new Vector3(width, bottomCubeCornerPosition.transform.localScale.y, bottomCubeCornerPosition.transform.localScale.z);
     }
-
-    // Start from the top corner and go to the bottom corner (where the cut occurs) in increments
-    private float GetRoundedCutWidth(float topCornerX, float bottomCornerX)
-    {
-        float result = 0f;
-
-        float totalDistance = Mathf.Abs(topCornerX - bottomCornerX);
-
-        while(result < totalDistance)
-        {
-            result += cubeDivisionWidth;
-        }
-
-        return result;
-    }
-
-
 }

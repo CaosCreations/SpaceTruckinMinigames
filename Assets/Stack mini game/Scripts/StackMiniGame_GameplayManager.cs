@@ -57,14 +57,12 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
 
             cubeSpawner.SpawnStackedCube(spawnPosition: bottomCube.transform.position,
                                          setWidth: bottomCube.transform.localScale.x);
-
             yield break;
         }
 
         CubeCornersPositionTracker topCube = cubeStack.CubeCornersPositionPile.TopCube;
 
         CubeOverlap cubeOverlap = cubeStack.GetCubeOverlap();
-
 
         // Cubes aren't stacked. It's game over
         if (cubeOverlap == CubeOverlap.None)

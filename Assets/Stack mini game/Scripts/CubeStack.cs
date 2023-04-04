@@ -29,16 +29,12 @@ public class CubeStack : MonoBehaviour
 
         // If the corners are this far apart, it can only mean that top and bottom cubes are not stacked on top of each other,
         // so there is no overlap
-        if ((topCubeRightCornerXposition < bottomCubeLeftCornerXposition)
-            || topCubeLeftCornerXposition > bottomCubeRightCornerXposition)
-        {
+        if ((topCubeRightCornerXposition < bottomCubeLeftCornerXposition) ||
+             topCubeLeftCornerXposition > bottomCubeRightCornerXposition)
             return CubeOverlap.None;
-        }
 
         if(bottomCubeRightCornerXposition < topCubeRightCornerXposition )
-        {
             return CubeOverlap.Right;
-        }
 
         return CubeOverlap.Left;
     }
