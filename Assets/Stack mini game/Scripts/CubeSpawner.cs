@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public interface ICubeSpawner
 {
@@ -15,9 +16,10 @@ public class CubeSpawner : MonoBehaviour, ICubeSpawner
 
     [SerializeField] private Transform cubeSpawnStartPosition;
 
-    public Action<GameObject> CubeSpawnedEvent;
+    public UnityAction<GameObject> CubeSpawnedEvent;
 
     [SerializeField]
+    [Tooltip("...")]
     [Range(2, 20)]
     private int cubeDivisions = 3;
 
@@ -52,6 +54,12 @@ public class CubeSpawner : MonoBehaviour, ICubeSpawner
         CubeSpawnedEvent.Invoke(spawnedCube);
     }
 
+    /// <summary>
+    /// The cubes are divided in several parts of equal width, and cuts include a set number of complete parts.
+    /// Following that logic, the more the cube divisions, the harder the game, because it is harder to get the timing right to stack smaller parts.
+    /// On the one hand, it becomes easy for the player to do perfect stacks, on the other hand it sets a minimum width for the cube,
+    /// making it easy to stack it.
+    /// </summary>
     public void CutCube(CubeCornersPositionTracker topCubeCornerPosition, CubeCornersPositionTracker bottomCubeCornerPosition, CubeOverlap cubeOverlap)
     {
         float topCornerXPosition = GetTopCornerPosition(topCubeCornerPosition, cubeOverlap);
@@ -75,24 +83,31 @@ public class CubeSpawner : MonoBehaviour, ICubeSpawner
 
     private float GetRoundedCutWidth(float topCornerX, float bottomCornerX)
     {
-        float cutWidth = 0f;
-
         float distanceBetweenCubes = Mathf.Abs(topCornerX - bottomCornerX);
 
-        while (cutWidth < distanceBetweenCubes)
-        {
-            cutWidth += cubeDivisionWidth;
-        }
+        // Calculate number of cube divisions needed to cover the distance
+        int numDivisions = Mathf.CeilToInt(distanceBetweenCubes / cubeDivisionWidth);
 
-        return cutWidth;
+        float roundedCutWidth = numDivisions * cubeDivisionWidth;
+        return roundedCutWidth;
     }
 
     private void ResizeCutCube(CubeCornersPositionTracker topCubeCornerPosition, CubeOverlap cubeOverlap, float bottomCornerXPosition, float roundedCutWidth)
     {
-        float newXCubePosition = cubeOverlap == CubeOverlap.Right ? (bottomCornerXPosition + (bottomCornerXPosition - roundedCutWidth)) / 2 : (bottomCornerXPosition + (bottomCornerXPosition + roundedCutWidth)) / 2;
+        float newXCubePosition = CalculateNewXCubePosition(bottomCornerXPosition, roundedCutWidth, cubeOverlap);
+        Vector3 newScale = new(roundedCutWidth, topCubeCornerPosition.transform.localScale.y, topCubeCornerPosition.transform.localScale.z);
 
-        topCubeCornerPosition.transform.position = new Vector3(newXCubePosition, topCubeCornerPosition.transform.position.y, topCubeCornerPosition.transform.position.z);
-        topCubeCornerPosition.transform.localScale = new Vector3(roundedCutWidth, topCubeCornerPosition.transform.localScale.y, topCubeCornerPosition.transform.localScale.z);
+        topCubeCornerPosition.transform.SetPositionAndRotation(
+            new Vector3(newXCubePosition, topCubeCornerPosition.transform.position.y, topCubeCornerPosition.transform.position.z), Quaternion.identity);
+
+        topCubeCornerPosition.transform.localScale = newScale;
+    }
+
+    private float CalculateNewXCubePosition(float bottomCornerXPosition, float roundedCutWidth, CubeOverlap cubeOverlap)
+    {
+        // Use offset based on overlap direction to calculate x value 
+        float offset = cubeOverlap == CubeOverlap.Right ? -1f : 1f;
+        return bottomCornerXPosition + offset * (roundedCutWidth / 2f);
     }
 
     private GameObject GetCubeFromPool()
