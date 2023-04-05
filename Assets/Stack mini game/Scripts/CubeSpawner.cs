@@ -1,7 +1,15 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class CubeSpawner : MonoBehaviour
+public interface ICubeSpawner
+{
+    void SpawnBottomCube();
+    void SpawnStackedCube(Vector3 spawnPosition, float setWidth);
+    void CutCube(CubeCornersPositionTracker topCubeCornerPosition, CubeCornersPositionTracker bottomCubeCornerPosition, CubeOverlap cubeOverlap);
+}
+
+public class CubeSpawner : MonoBehaviour, ICubeSpawner
 {
     [SerializeField] private GameObject cubePrefab;
 
@@ -9,11 +17,12 @@ public class CubeSpawner : MonoBehaviour
 
     public Action<GameObject> CubeSpawnedEvent;
 
-
+    [SerializeField]
     [Range(2, 20)]
-    [SerializeField] private int cubeDivisions = 3;
+    private int cubeDivisions = 3;
 
     private float cubeDivisionWidth;
+    private readonly List<GameObject> cubePool = new();
 
     private void Awake()
     {
@@ -22,8 +31,9 @@ public class CubeSpawner : MonoBehaviour
 
     public void SpawnBottomCube()
     {
-        GameObject spawnedCube = Instantiate(cubePrefab, cubeSpawnStartPosition.position, Quaternion.identity);
+        GameObject spawnedCube = GetCubeFromPool();
 
+        spawnedCube.transform.SetPositionAndRotation(cubeSpawnStartPosition.position, Quaternion.identity);
         spawnedCube.transform.localScale = new Vector3(cubePrefab.transform.localScale.x, spawnedCube.transform.localScale.y, spawnedCube.transform.localScale.z);
 
         CubeSpawnedEvent.Invoke(spawnedCube);
@@ -33,20 +43,14 @@ public class CubeSpawner : MonoBehaviour
     {
         spawnPosition += new Vector3(0f, cubePrefab.transform.localScale.y, 0f);
 
-        GameObject spawnedCube = Instantiate(cubePrefab, spawnPosition, Quaternion.identity);
+        GameObject spawnedCube = GetCubeFromPool();
 
+        spawnedCube.transform.position = spawnPosition;
+        spawnedCube.transform.rotation = Quaternion.identity;
         spawnedCube.transform.localScale = new Vector3(setWidth, spawnedCube.transform.localScale.y, spawnedCube.transform.localScale.z);
 
         CubeSpawnedEvent.Invoke(spawnedCube);
     }
-
-
-    /// <summary>
-    /// The cubes are divided in several parts of equal width, and cuts include a set number of complete parts.
-    /// Following that logic, the more the cube divisions, the harder the game, because it is harder to get the timing right to stack smaller parts.
-    /// On the one hand, it becomes easy for the player to do perfect stacks, on the other hand it sets a minimum width for the cube,
-    /// making it easy to stack it.
-    /// </summary>
 
     public void CutCube(CubeCornersPositionTracker topCubeCornerPosition, CubeCornersPositionTracker bottomCubeCornerPosition, CubeOverlap cubeOverlap)
     {
@@ -61,20 +65,12 @@ public class CubeSpawner : MonoBehaviour
 
     private float GetTopCornerPosition(CubeCornersPositionTracker topCubeCornerPosition, CubeOverlap cubeOverlap)
     {
-        if (cubeOverlap == CubeOverlap.Right)
-            return topCubeCornerPosition.GetLeftCornerPosition();
-
-        else
-            return topCubeCornerPosition.GetRightCornerPosition();
+        return cubeOverlap == CubeOverlap.Right ? topCubeCornerPosition.GetLeftCornerPosition() : topCubeCornerPosition.GetRightCornerPosition();
     }
 
     private float GetBottomCornerPosition(CubeCornersPositionTracker bottomCubeCornerPosition, CubeOverlap cubeOverlap)
     {
-        if (cubeOverlap == CubeOverlap.Right)
-            return bottomCubeCornerPosition.GetRightCornerPosition();
-
-        else
-            return bottomCubeCornerPosition.GetLeftCornerPosition();
+        return cubeOverlap == CubeOverlap.Right ? bottomCubeCornerPosition.GetRightCornerPosition() : bottomCubeCornerPosition.GetLeftCornerPosition();
     }
 
     private float GetRoundedCutWidth(float topCornerX, float bottomCornerX)
@@ -83,23 +79,34 @@ public class CubeSpawner : MonoBehaviour
 
         float distanceBetweenCubes = Mathf.Abs(topCornerX - bottomCornerX);
 
-        while(cutWidth < distanceBetweenCubes)
+        while (cutWidth < distanceBetweenCubes)
+        {
             cutWidth += cubeDivisionWidth;
+        }
 
         return cutWidth;
     }
 
     private void ResizeCutCube(CubeCornersPositionTracker topCubeCornerPosition, CubeOverlap cubeOverlap, float bottomCornerXPosition, float roundedCutWidth)
     {
-        float newXCubePosition = 0f;
-
-        if (cubeOverlap == CubeOverlap.Right)
-            newXCubePosition = (bottomCornerXPosition + (bottomCornerXPosition - roundedCutWidth)) / 2;
-
-        else if (cubeOverlap == CubeOverlap.Left)
-            newXCubePosition = (bottomCornerXPosition + (bottomCornerXPosition + roundedCutWidth)) / 2;
+        float newXCubePosition = cubeOverlap == CubeOverlap.Right ? (bottomCornerXPosition + (bottomCornerXPosition - roundedCutWidth)) / 2 : (bottomCornerXPosition + (bottomCornerXPosition + roundedCutWidth)) / 2;
 
         topCubeCornerPosition.transform.position = new Vector3(newXCubePosition, topCubeCornerPosition.transform.position.y, topCubeCornerPosition.transform.position.z);
         topCubeCornerPosition.transform.localScale = new Vector3(roundedCutWidth, topCubeCornerPosition.transform.localScale.y, topCubeCornerPosition.transform.localScale.z);
+    }
+
+    private GameObject GetCubeFromPool()
+    {
+        GameObject cube = cubePool.Find(c => !c.activeSelf);
+
+        if (cube == null)
+        {
+            cube = Instantiate(cubePrefab, Vector3.zero, Quaternion.identity, transform);
+            cubePool.Add(cube);
+        }
+
+        cube.SetActive(true);
+
+        return cube;
     }
 }

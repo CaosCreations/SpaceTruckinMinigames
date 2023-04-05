@@ -49,7 +49,7 @@ public class CubeStack : MonoBehaviour
     {
         foreach (GameObject cube in StackedCubes)
         {
-            Destroy(cube);
+            cube.SetActive(false);
         }
 
         StackedCubes.Clear();

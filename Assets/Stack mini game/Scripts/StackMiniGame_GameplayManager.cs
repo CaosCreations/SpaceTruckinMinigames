@@ -1,13 +1,12 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class StackMiniGame_GameplayManager : MonoBehaviour
 {
     [Header("Dependencies")]
-    [SerializeField] private CubeSpawner cubeSpawner;
+    private ICubeSpawner cubeSpawner;
 
     [SerializeField] private CubeMover cubeMover;
 
@@ -20,9 +19,11 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
     [Header("Gameplay")]
 
     [Range(0.0f, 2f)]
+    [Tooltip("How long...")]
     [SerializeField] private float stackFreezeSeconds;
 
     [Range(0.0f, 2f)]
+    [Tooltip("How long...")]
     [SerializeField] private float screenShakeSeconds;
 
     [SerializeField] private int fullWinScore;
@@ -31,12 +32,16 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
 
     public GameState GameStates => gameStates;
 
-    public Action GameResetEvent;
+    public event UnityAction GameResetEvent;
 
-    public Action GameEndEvent;
+    public event UnityAction GameEndEvent;
 
     private IEnumerator stackCoroutine;
 
+    private void Awake()
+    {
+        cubeSpawner = GetComponentInChildren<ICubeSpawner>();
+    }
 
     private void Start()
     {
@@ -79,7 +84,7 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
         // Cubes aren't stacked. It's game over
         if (cubeOverlap == CubeOverlap.None)
         {
-            if(cubeStack.StackedCubes.Count >= partialWinScore+1)
+            if (cubeStack.StackedCubes.Count >= partialWinScore + 1)
                 gameStates.SetCurrentState("partial win");
             else
                 gameStates.SetCurrentState("lose");
