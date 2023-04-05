@@ -19,11 +19,11 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
     [Header("Gameplay")]
 
     [Range(0.0f, 2f)]
-    [Tooltip("How long...")]
+    [Tooltip("...")]
     [SerializeField] private float stackFreezeSeconds;
 
     [Range(0.0f, 2f)]
-    [Tooltip("How long...")]
+    [Tooltip("...")]
     [SerializeField] private float screenShakeSeconds;
 
     [SerializeField] private int fullWinScore;
@@ -65,44 +65,65 @@ public class StackMiniGame_GameplayManager : MonoBehaviour
     {
         CubeCornersPositionTracker bottomCube = cubeStack.CubeCornersPositionPile.BottomCube;
 
-        // There is only one cube at the beginning. The player can place it wherever. There is no cutting involved yet.
+        // Start coroutine based on how many cubes 
         if (cubeStack.CubeCornersPositionPile.TopCube == null)
         {
-            screenShaker.ShakeScreen(seconds: screenShakeSeconds);
-            yield return StartCoroutine(cubeMover.FreezeCubeMovement(stackFreezeSeconds));
-
-            cubeSpawner.SpawnStackedCube(spawnPosition: bottomCube.transform.position,
-                                         setWidth: bottomCube.transform.localScale.x);
-            stackCoroutine = null;
-            yield break;
+            yield return StartCoroutine(PlaceFirstCube(bottomCube));
         }
+        else
+        {
+            yield return StartCoroutine(StackCubes(bottomCube));
+        }
+    }
 
+    private IEnumerator PlaceFirstCube(CubeCornersPositionTracker bottomCube)
+    {
+        screenShaker.ShakeScreen(seconds: screenShakeSeconds);
+        yield return StartCoroutine(cubeMover.FreezeCubeMovement(stackFreezeSeconds));
+
+        cubeSpawner.SpawnStackedCube(spawnPosition: bottomCube.transform.position,
+                                     setWidth: bottomCube.transform.localScale.x);
+
+        stackCoroutine = null;
+    }
+
+    private IEnumerator StackCubes(CubeCornersPositionTracker bottomCube)
+    {
         CubeCornersPositionTracker topCube = cubeStack.CubeCornersPositionPile.TopCube;
 
         CubeOverlap cubeOverlap = cubeStack.GetCubeOverlap();
 
-        // Cubes aren't stacked. It's game over
+        // Start coroutine based on how the cubes are overlapping
         if (cubeOverlap == CubeOverlap.None)
         {
-            if (cubeStack.StackedCubes.Count >= partialWinScore + 1)
-                gameStates.SetCurrentState("partial win");
-            else
-                gameStates.SetCurrentState("lose");
-
-            GameEndEvent?.Invoke();
-            stackCoroutine = null;
-            yield break;
+            yield return StartCoroutine(GameOverCoroutine());
         }
+        else
+        {
+            cubeSpawner.CutCube(topCube, bottomCube, cubeOverlap);
 
-        // Cubes are stacked
-        // we cut part of the top cube so that its side that
-        // was sticking out is now aligned with that of the bottom cube
-        cubeSpawner.CutCube(topCube, bottomCube, cubeOverlap);
+            yield return StartCoroutine(StackCubeCoroutineAfterCut(topCube));
+        }
+    }
 
+    private IEnumerator GameOverCoroutine()
+    {
+        if (cubeStack.StackedCubes.Count >= partialWinScore + 1)
+            gameStates.SetCurrentState("partial win");
+        else
+            gameStates.SetCurrentState("lose");
+
+        GameEndEvent?.Invoke();
+        stackCoroutine = null;
+
+        yield break;
+    }
+
+    private IEnumerator StackCubeCoroutineAfterCut(CubeCornersPositionTracker topCube)
+    {
         screenShaker.ShakeScreen(seconds: screenShakeSeconds);
         yield return StartCoroutine(cubeMover.FreezeCubeMovement(stackFreezeSeconds));
 
-        // Only spawn next top cube if the stack hasn't reached to top rank yet
         if (cubeStack.StackedCubes.Count >= fullWinScore)
         {
             gameStates.SetCurrentState("full win");
