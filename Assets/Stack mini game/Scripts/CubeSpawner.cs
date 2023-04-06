@@ -24,7 +24,7 @@ public class CubeSpawner : MonoBehaviour, ICubeSpawner
     private int cubeDivisions = 3;
 
     private float cubeDivisionWidth;
-    private readonly List<GameObject> cubePool = new();
+    private readonly List<GameObject> cubePool = new List<GameObject>();
 
     private void Awake()
     {
@@ -95,7 +95,7 @@ public class CubeSpawner : MonoBehaviour, ICubeSpawner
     private void ResizeCutCube(CubeCornersPositionTracker topCubeCornerPosition, CubeOverlap cubeOverlap, float bottomCornerXPosition, float roundedCutWidth)
     {
         float newXCubePosition = CalculateNewXCubePosition(bottomCornerXPosition, roundedCutWidth, cubeOverlap);
-        Vector3 newScale = new(roundedCutWidth, topCubeCornerPosition.transform.localScale.y, topCubeCornerPosition.transform.localScale.z);
+        Vector3 newScale = new Vector3(roundedCutWidth, topCubeCornerPosition.transform.localScale.y, topCubeCornerPosition.transform.localScale.z);
 
         topCubeCornerPosition.transform.SetPositionAndRotation(
             new Vector3(newXCubePosition, topCubeCornerPosition.transform.position.y, topCubeCornerPosition.transform.position.z), Quaternion.identity);

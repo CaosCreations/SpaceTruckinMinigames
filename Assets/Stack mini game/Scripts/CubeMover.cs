@@ -20,13 +20,15 @@ public class CubeMover : MonoBehaviour
     [Range(0.01f, 100f)]
     [SerializeField] private float slowMovingSpeed;
     [Range(0.0f, 15f)]
-    [SerializeField] private float slowDownDistanceThreshold;
+    [SerializeField] private float closeThreshold;
 
     private float currentMovingSpeed = 0f;
 
     private float direction = 1;
 
     private bool canMoveCube;
+
+    private bool close;
 
     private void Awake()
     {
@@ -37,7 +39,7 @@ public class CubeMover : MonoBehaviour
 
         ChangeMovingCubeDirectionCollider[] ChangeMovingCubeDirectionColliders = GetComponentsInChildren<ChangeMovingCubeDirectionCollider>();
 
-        foreach(ChangeMovingCubeDirectionCollider item in ChangeMovingCubeDirectionColliders)
+        foreach (ChangeMovingCubeDirectionCollider item in ChangeMovingCubeDirectionColliders)
         {
             item.CollisionWithMovingCubeEvent += ChangeDirection;
         }
@@ -45,7 +47,7 @@ public class CubeMover : MonoBehaviour
 
     private void Update()
     {
-        SetMovingSpeed();
+        CheckCubeDistances();
         MoveCube();
     }
 
@@ -54,9 +56,9 @@ public class CubeMover : MonoBehaviour
         direction *= -1;
     }
 
-    private void SetMovingSpeed()
+    private void CheckCubeDistances()
     {
-        if (cubeStack.StackedCubes.Count == 1)
+        if (cubeStack.StackedCubes.Count < 2)
         {
             currentMovingSpeed = normalMovingSpeed;
             return;
@@ -64,11 +66,17 @@ public class CubeMover : MonoBehaviour
 
         float cubesDistance = Mathf.Abs(cubeStack.StackedCubes[cubeStack.StackedCubes.Count - 2].transform.position.x - currentMovingCube.position.x);
 
-        if (cubesDistance <= slowDownDistanceThreshold)
+        if (cubesDistance <= closeThreshold)
+        {
+            currentMovingCube.gameObject.GetComponent<CubeAppearance>().SetSlowSpeedMaterial();
             currentMovingSpeed = slowMovingSpeed;
+        }
 
         else
+        {
+            currentMovingCube.gameObject.GetComponent<CubeAppearance>().SetNormalSpeedMaterial();
             currentMovingSpeed = normalMovingSpeed;
+        }
     }
 
     private void MoveCube()
