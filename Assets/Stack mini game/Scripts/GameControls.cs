@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameControls : MonoBehaviour
@@ -13,7 +11,7 @@ public class GameControls : MonoBehaviour
 
     private void CheckSpaceBarInput()
     {
-        if(Input.GetKeyDown("space"))
+        if (gameplayManager.GameStates.CurrentState == "new game" && Input.GetKeyDown(KeyCode.Space))
         {
             gameplayManager.StackCube();
         }
