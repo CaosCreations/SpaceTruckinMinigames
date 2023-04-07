@@ -27,6 +27,8 @@ public class CubeMover : MonoBehaviour
 
     private bool canMoveCube;
 
+    private bool isClose;
+
     private void Awake()
     {
         cubeSpawner.CubeSpawnedEvent += SetMovingCube;
@@ -63,16 +65,22 @@ public class CubeMover : MonoBehaviour
 
         float cubesDistance = Mathf.Abs(cubeStack.StackedCubes[cubeStack.StackedCubes.Count - 2].transform.position.x - currentMovingCube.position.x);
 
-        if (cubesDistance <= closeThreshold)
-        {
-            currentMovingCube.gameObject.GetComponent<CubeAppearance>().SetSlowSpeedMaterial();
-            currentMovingSpeed = slowMovingSpeed;
-        }
+        bool isCloseThisFrame = cubesDistance <= closeThreshold;
 
-        else
+        if (isCloseThisFrame != isClose)
         {
-            currentMovingCube.gameObject.GetComponent<CubeAppearance>().SetNormalSpeedMaterial();
-            currentMovingSpeed = normalMovingSpeed;
+            isClose = isCloseThisFrame;
+
+            if (isClose)
+            {
+                currentMovingCube.gameObject.GetComponent<CubeAppearance>().SetSlowSpeedMaterial();
+                currentMovingSpeed = slowMovingSpeed;
+            }
+            else
+            {
+                currentMovingCube.gameObject.GetComponent<CubeAppearance>().SetNormalSpeedMaterial();
+                currentMovingSpeed = normalMovingSpeed;
+            }
         }
     }
 
