@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CubeMover : MonoBehaviour
@@ -27,8 +26,6 @@ public class CubeMover : MonoBehaviour
     private float direction = 1;
 
     private bool canMoveCube;
-
-    private bool close;
 
     private void Awake()
     {
