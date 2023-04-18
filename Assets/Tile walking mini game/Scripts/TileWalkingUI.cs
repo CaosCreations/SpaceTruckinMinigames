@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class TileWalkingUI : MonoBehaviour
@@ -15,6 +16,8 @@ public class TileWalkingUI : MonoBehaviour
 
     [SerializeField] private Button gameOverButton;
 
+    [SerializeField] private Text currentScoreText;
+
     private void Awake()
     {
         gameOverButton.onClick.RemoveAllListeners();
@@ -24,6 +27,7 @@ public class TileWalkingUI : MonoBehaviour
 
         gridManager.WinEvent += ToggleWinUI;
         gridManager.LoseEvent += ToggleGameOverUI;
+        gridManager.TileStatusChangedEvent += UpdateCurrentScore;
     }
 
     public void ToggleGameOverUI()
@@ -36,6 +40,14 @@ public class TileWalkingUI : MonoBehaviour
     {
         winText.gameObject.SetActive(!winText.gameObject.activeSelf);
         gameOverButton.gameObject.SetActive(!gameOverButton.gameObject.activeSelf);
+    }
+
+    private void UpdateCurrentScore(Tile tile)
+    {
+        if(tile.TileStatus == TileStatus.Touched)
+        {
+            currentScoreText.text = (100 - 5 * gridManager.UntouchedTileCount).ToString();
+        }
     }
 
     private void DisableAllUIElements()
