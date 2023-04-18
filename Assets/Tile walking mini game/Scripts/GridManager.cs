@@ -11,13 +11,15 @@ public class GridManager : MonoBehaviour
 
     [SerializeField] private TileColorManager tileColorManager;
 
-    [SerializeField] private ObstaclesPosition[][] obstacleLayouts;
+    private ObstaclesPosition[][] obstacleLayouts;
 
     [SerializeField] private GameObject TilePrefab;
 
     public Action WinEvent;
 
     public Action LoseEvent;
+
+    public Action<Tile> TileStatusChangedEvent;
     public int UntouchedTileCount { get; private set; }
 
     public int GridWidth { get; private set; } = 5;
@@ -65,6 +67,29 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    // As a new game starts, we randomly pick an obstacle layout for the map
+    // We can create more layout below, by adding them to the obstacleLayouts array
+    private void CreateObstaclesLayouts()
+    {
+        obstacleLayouts = new ObstaclesPosition[2][];
+
+        obstacleLayouts[0] = new ObstaclesPosition[5]
+        {                           new ObstaclesPosition (0,2),
+                                    new ObstaclesPosition (0,3),
+                                    new ObstaclesPosition (0,4),
+                                    new ObstaclesPosition (2,3),
+                                    new ObstaclesPosition (2,4),
+        };
+
+        obstacleLayouts[1] = new ObstaclesPosition[5]
+        {                           new ObstaclesPosition (2,2),
+                                    new ObstaclesPosition (3,2),
+                                    new ObstaclesPosition (0,4),
+                                    new ObstaclesPosition (1,4),
+                                    new ObstaclesPosition (2,4),
+        };
+    }
+
     private void SpawnTiles()
     {
         int currentXPosition = -225;
@@ -85,36 +110,6 @@ public class GridManager : MonoBehaviour
             currentYPosition = -225;
             currentXPosition += 100;
         }
-    }
-
-
-    // As a new game starts, we randomly pick an obstacle layout for the map
-    // We can create more layout below, by adding them to the obstacleLayouts array
-    private void CreateObstaclesLayouts()
-    {
-        obstacleLayouts = new ObstaclesPosition[3][];
-
-        obstacleLayouts[0] = new ObstaclesPosition[5]
-        {                           new ObstaclesPosition (0,2),
-                                    new ObstaclesPosition (0,3),
-                                    new ObstaclesPosition (0,4),
-                                    new ObstaclesPosition (2,3),
-                                    new ObstaclesPosition (2,4),
-        };
-
-        obstacleLayouts[1] = new ObstaclesPosition[5]
-        {                           new ObstaclesPosition (2,2),
-                                    new ObstaclesPosition (3,2),
-                                    new ObstaclesPosition (0,4),
-                                    new ObstaclesPosition (1,4),
-                                    new ObstaclesPosition (2,4),
-        };
-
-        obstacleLayouts[2] = new ObstaclesPosition[3]
-        {                           new ObstaclesPosition (1,2),
-                                    new ObstaclesPosition (2,2),
-                                    new ObstaclesPosition (3,3),
-        };
     }
 
     // If the player walks on all tiles only once, he or she wins
@@ -139,6 +134,8 @@ public class GridManager : MonoBehaviour
 
         if (UntouchedTileCount == 0)
             WinEvent();
+
+        TileStatusChangedEvent?.Invoke(tile);
     }
 
     public Tile GetTileAt(int Xposition, int Yposition)
