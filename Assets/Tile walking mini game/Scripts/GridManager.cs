@@ -20,10 +20,16 @@ public class GridManager : MonoBehaviour
     public Action LoseEvent;
 
     public Action<Tile> TileStatusChangedEvent;
-    public int UntouchedTileCount { get; private set; }
+
+    public int touchedTiles_Percent { get; private set; } = 0;
 
     public int GridWidth { get; private set; } = 5;
     public int GridHeight { get; private set; } = 5;
+
+    [SerializeField] private GameState currentGameState;
+
+    [Range(20, 95)]
+    [SerializeField] private int partialWinThreshold_Percent = 75;
 
     private void Awake()
     {
@@ -38,6 +44,9 @@ public class GridManager : MonoBehaviour
 
     public void ResetGrid()
     {
+        currentGameState.SetCurrentState("new game");
+        touchedTiles_Percent = 0;
+
         foreach (Tile tile in tileGrid)
         {
             tile.TileStatus = TileStatus.Untouched;
@@ -56,8 +65,6 @@ public class GridManager : MonoBehaviour
     private void AddingObsctacles()
     {
         ObstaclesPosition[] randomlyPickedLayout = obstacleLayouts[UnityEngine.Random.Range(0, obstacleLayouts.Length)];
-
-        UntouchedTileCount = GridWidth * GridHeight - randomlyPickedLayout.Length;
 
         foreach (ObstaclesPosition item in randomlyPickedLayout)
         {
@@ -121,19 +128,28 @@ public class GridManager : MonoBehaviour
         if (tile.TileStatus == TileStatus.Untouched)
         {
             tile.TileStatus = TileStatus.Touched;
-            UntouchedTileCount--;
+            touchedTiles_Percent += 5;
         }
 
         else if (tile.TileStatus == TileStatus.Touched)
         {
             tile.TileStatus = TileStatus.TouchedTwice;
+            currentGameState.SetCurrentState("lose");
             LoseEvent();
         }
 
         tileColorManager.ChangeTileColorBasedOnStatus(tile);
 
-        if (UntouchedTileCount == 0)
+        if (touchedTiles_Percent == 100)
+        {
+            currentGameState.SetCurrentState("full win");
             WinEvent();
+        }
+
+        else if(touchedTiles_Percent >= partialWinThreshold_Percent)
+        {
+            currentGameState.SetCurrentState("partial win");
+        } 
 
         TileStatusChangedEvent?.Invoke(tile);
     }
