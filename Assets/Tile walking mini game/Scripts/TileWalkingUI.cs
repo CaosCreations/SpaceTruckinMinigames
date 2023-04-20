@@ -6,15 +6,24 @@ using UnityEngine.UI;
 
 public class TileWalkingUI : MonoBehaviour
 {
+    [Header("Dependencies")]
+
     [SerializeField] private GridManager gridManager;
 
+    [SerializeField] private Timer timer;
+
     [SerializeField] private PlayerControls playerControls;
+
+    [Header("UI")]
 
     [SerializeField] private Text endGameText;
 
     [SerializeField] private Button gameOverButton;
 
     [SerializeField] private Text currentScoreText;
+
+    [SerializeField] private Text timerText;
+
 
     private void Awake()
     {
@@ -25,6 +34,8 @@ public class TileWalkingUI : MonoBehaviour
 
         gridManager.GameEventUpdatedEvent += UpdateUI;
         gridManager.TileStatusChangedEvent += UpdateCurrentScore;
+
+        timer.TimerUpdatedEvent += UpdateTimer;
     }
 
     private void UpdateUI(GameState gameState)
@@ -59,6 +70,11 @@ public class TileWalkingUI : MonoBehaviour
             number = 100;
 
         currentScoreText.text = number.ToString() + "%";
+    }
+
+    private void UpdateTimer(int timeLeft)
+    {
+        timerText.text= timeLeft.ToString();
     }
 
     private void DisableAllUIElements()

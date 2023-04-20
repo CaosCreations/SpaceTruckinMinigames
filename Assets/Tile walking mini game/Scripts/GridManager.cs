@@ -45,6 +45,7 @@ public class GridManager : MonoBehaviour
     public void ResetGrid()
     {
         currentGameState.SetCurrentState("new game");
+        GameEventUpdatedEvent?.Invoke(currentGameState);
         touchedTiles_Percent = 0;
 
         foreach (Tile tile in tileGrid)
