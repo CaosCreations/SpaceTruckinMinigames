@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   states:
   - new game
+  - ongoing
   - partial win
   - full win
   - lose

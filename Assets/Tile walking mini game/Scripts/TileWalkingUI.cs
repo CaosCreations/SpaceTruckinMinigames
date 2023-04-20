@@ -10,9 +10,7 @@ public class TileWalkingUI : MonoBehaviour
 
     [SerializeField] private PlayerControls playerControls;
 
-    [SerializeField] private Text gameOverText;
-
-    [SerializeField] private Text winText;
+    [SerializeField] private Text endGameText;
 
     [SerializeField] private Button gameOverButton;
 
@@ -25,21 +23,27 @@ public class TileWalkingUI : MonoBehaviour
         gameOverButton.onClick.AddListener(playerControls.ResetPlayerMovement);
         gameOverButton.onClick.AddListener(DisableAllUIElements);
 
-        gridManager.WinEvent += ToggleWinUI;
-        gridManager.LoseEvent += ToggleGameOverUI;
+        gridManager.GameEventUpdatedEvent += UpdateUI;
         gridManager.TileStatusChangedEvent += UpdateCurrentScore;
     }
 
-    public void ToggleGameOverUI()
+    private void UpdateUI(GameState gameState)
     {
-        gameOverText.gameObject.SetActive(!gameOverText.gameObject.activeSelf);
-        gameOverButton.gameObject.SetActive(!gameOverButton.gameObject.activeSelf);
+        if (gameState.CurrentState == "full win")
+            ToggleEndGameUI(message: "You won!");
+
+        else if (gameState.CurrentState == "partial win")
+            ToggleEndGameUI(message: "You (kinda) won.");
+
+        else if (gameState.CurrentState == "lose")
+            ToggleEndGameUI(message: "You lost.");
     }
 
-    public void ToggleWinUI()
+    private void ToggleEndGameUI(string message)
     {
-        winText.gameObject.SetActive(!winText.gameObject.activeSelf);
-        gameOverButton.gameObject.SetActive(!gameOverButton.gameObject.activeSelf);
+        endGameText.text = message;
+        endGameText.gameObject.SetActive(true);
+        gameOverButton.gameObject.SetActive(true);
     }
 
     private void UpdateCurrentScore(Tile tile)
@@ -50,8 +54,7 @@ public class TileWalkingUI : MonoBehaviour
 
     private void DisableAllUIElements()
     {
-        gameOverText.gameObject.SetActive(false);
-        winText.gameObject.SetActive(false);
+        endGameText.gameObject.SetActive(false);
         gameOverButton.gameObject.SetActive(false);
     }
 }
