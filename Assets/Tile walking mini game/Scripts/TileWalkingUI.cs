@@ -48,8 +48,17 @@ public class TileWalkingUI : MonoBehaviour
 
     private void UpdateCurrentScore(Tile tile)
     {
-        if(tile.TileStatus == TileStatus.Touched)
-            currentScoreText.text = gridManager.touchedTiles_Percent.ToString() + "%";
+        if(tile.TileStatus != TileStatus.Touched)
+        {
+            return;
+        }
+
+        int number = 5 + gridManager.touchedTiles_Percent;
+
+        if(number > 100)
+            number = 100;
+
+        currentScoreText.text = number.ToString() + "%";
     }
 
     private void DisableAllUIElements()
