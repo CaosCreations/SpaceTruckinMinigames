@@ -8,7 +8,7 @@ using static UnityEngine.Random;
 [Serializable]
 public class GameState
 {
-    [SerializeField] private StackMiniGame_StateRegister stateRegister;
+    [SerializeField] private StateRegister stateRegister;
 
     public string CurrentState { get; private set; }
 
