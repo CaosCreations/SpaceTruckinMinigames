@@ -90,9 +90,9 @@ public class PlayerControls : MonoBehaviour
 
     private void DisablePlayerMovement(GameState gameState)
     {
-        if(gameState.CurrentState == "lose" || 
-           gameState.CurrentState == "partial win" || 
-           gameState.CurrentState == "full win")
+        if(gameState.CheckCurrentState("lose") ||
+           gameState.CheckCurrentState("partial win") ||
+           gameState.CheckCurrentState("full win"))
 
         canMove = false;
     }

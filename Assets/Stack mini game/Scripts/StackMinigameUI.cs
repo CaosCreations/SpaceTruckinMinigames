@@ -40,7 +40,7 @@ public class StackMinigameUI : MonoBehaviour
 
         foreach (GameResultUIData item in gameResultMessages) 
         { 
-            if(gameState.TryGetState(item.State, out result) == true && result == gameState.CurrentState)
+            if(gameState.CheckCurrentState(item.State) == true)
             {
                 outcomeText.text = item.Message;
 
