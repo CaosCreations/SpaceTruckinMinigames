@@ -15,9 +15,7 @@ public class GridManager : MonoBehaviour
 
     [SerializeField] private GameObject TilePrefab;
 
-    public Action WinEvent;
-
-    public Action LoseEvent;
+    public Action<GameState> GameEventUpdatedEvent;
 
     public Action<Tile> TileStatusChangedEvent;
 
@@ -30,6 +28,8 @@ public class GridManager : MonoBehaviour
 
     [Range(20, 95)]
     [SerializeField] private int partialWinThreshold_Percent = 75;
+
+    private Tile currentTile;
 
     private void Awake()
     {
@@ -123,35 +123,41 @@ public class GridManager : MonoBehaviour
     // If the player walks on the same tile twice, it's game over
     public void UpdateTileStatus(int Xposition, int Yposition)
     {
-        Tile tile = GetTileAt(Xposition, Yposition);
+        currentTile = GetTileAt(Xposition, Yposition);
 
-        if (tile.TileStatus == TileStatus.Untouched)
+        if (currentTile.TileStatus == TileStatus.Untouched)
         {
-            tile.TileStatus = TileStatus.Touched;
+            currentTile.TileStatus = TileStatus.Touched;
             touchedTiles_Percent += 5;
         }
 
-        else if (tile.TileStatus == TileStatus.Touched)
+        else if (currentTile.TileStatus == TileStatus.Touched)
         {
-            tile.TileStatus = TileStatus.TouchedTwice;
-            currentGameState.SetCurrentState("lose");
-            LoseEvent();
+            currentTile.TileStatus = TileStatus.TouchedTwice;
         }
 
-        tileColorManager.ChangeTileColorBasedOnStatus(tile);
+        tileColorManager.ChangeTileColorBasedOnStatus(currentTile);
 
+        TileStatusChangedEvent?.Invoke(currentTile);
+
+        UpdateGameState();
+    }
+
+    private void UpdateGameState()
+    {
         if (touchedTiles_Percent == 100)
-        {
             currentGameState.SetCurrentState("full win");
-            WinEvent();
-        }
 
-        else if(touchedTiles_Percent >= partialWinThreshold_Percent)
-        {
+        else if (currentTile.TileStatus == TileStatus.TouchedTwice && touchedTiles_Percent >= partialWinThreshold_Percent)
             currentGameState.SetCurrentState("partial win");
-        } 
 
-        TileStatusChangedEvent?.Invoke(tile);
+        else if (currentTile.TileStatus == TileStatus.TouchedTwice && touchedTiles_Percent < partialWinThreshold_Percent)
+            currentGameState.SetCurrentState("lose");
+
+        else
+            currentGameState.SetCurrentState("ongoing");
+
+        GameEventUpdatedEvent?.Invoke(currentGameState);
     }
 
     public Tile GetTileAt(int Xposition, int Yposition)
