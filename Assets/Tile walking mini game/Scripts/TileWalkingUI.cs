@@ -40,13 +40,13 @@ public class TileWalkingUI : MonoBehaviour
 
     private void UpdateUI(GameState gameState)
     {
-        if (gameState.CurrentState == "full win")
+        if (gameState.CheckCurrentState("full win"))
             ToggleEndGameUI(message: "You won!");
 
-        else if (gameState.CurrentState == "partial win")
+        else if (gameState.CheckCurrentState("partial win"))
             ToggleEndGameUI(message: "You (kinda) won.");
 
-        else if (gameState.CurrentState == "lose")
+        else if (gameState.CheckCurrentState("lose"))
             ToggleEndGameUI(message: "You lost.");
     }
 

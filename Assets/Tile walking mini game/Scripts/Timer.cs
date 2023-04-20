@@ -39,12 +39,12 @@ public class Timer : MonoBehaviour
 
     private void UpdateTimer(GameState gameState)
     {
-        if (gameState.CurrentState == "new game")
+        if (gameState.CheckCurrentState("new game"))
             StartTimer();
 
-        else if (gameState.CurrentState == "full win" || 
-                 gameState.CurrentState == "partial win" || 
-                 gameState.CurrentState == "lose")
+        else if (gameState.CheckCurrentState("full win") || 
+                 gameState.CheckCurrentState("partial win") || 
+                 gameState.CheckCurrentState("lose"))
         {
             StopTimer();
         }

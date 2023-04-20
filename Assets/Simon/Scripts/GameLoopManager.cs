@@ -54,7 +54,7 @@ public class GameLoopManager : MonoBehaviour
 
     public IEnumerator SelectColor(ColorButton colorButton)
     {
-        if (gameState.CurrentState == "watching phase")
+        if (gameState.CheckCurrentState("watching phase"))
         {
             yield break;
         }

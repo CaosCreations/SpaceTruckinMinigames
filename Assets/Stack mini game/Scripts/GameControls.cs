@@ -11,7 +11,7 @@ public class GameControls : MonoBehaviour
 
     private void CheckSpaceBarInput()
     {
-        if (gameplayManager.GameStates.CurrentState == "new game" && Input.GetKeyDown(KeyCode.Space))
+        if (gameplayManager.GameStates.CheckCurrentState("new game") && Input.GetKeyDown(KeyCode.Space))
         {
             gameplayManager.StackCube();
         }
