@@ -26,11 +26,14 @@ public class Timer : MonoBehaviour
         }
     }
 
+
     private bool timerRunning = false;
 
     private IEnumerator timerCoroutine;
 
     public Action<int> TimerUpdatedEvent;
+
+    private bool timerRunning = false;
 
     private void Awake()
     {
@@ -41,7 +44,6 @@ public class Timer : MonoBehaviour
     {
         if (gameState.CheckCurrentState("new game"))
             StartTimer();
-
         else if (gameState.CheckCurrentState(new List<string>() { "full win", "partial win", "lose" }) == true)
         {
             StopTimer();
