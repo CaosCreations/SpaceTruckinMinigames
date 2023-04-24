@@ -8,17 +8,26 @@ using static UnityEngine.Random;
 [Serializable]
 public class GameState
 {
-    [SerializeField] private StackMiniGame_StateRegister stateRegister;
+    [SerializeField] private StateRegister stateRegister;
 
-    public string CurrentState { get; private set; }
+    private string currentState;
 
     public void SetCurrentState(string newState)
     {
         if(TryGetState(newState.ToLower().Trim(), out string result) == true)
-                CurrentState = result;
+                currentState = result;
     }
 
-    public bool TryGetState(string state, out string result)
+    public bool CheckCurrentState(string state)
+    {
+        string result;
+
+        TryGetState(state, out result);
+
+        return currentState == result;
+    }
+
+    private bool TryGetState(string state, out string result)
     {
         state = state.ToLower().Trim();
 
@@ -32,6 +41,6 @@ public class GameState
         }
 
         throw new ArgumentException("The state:" + state + ", you tried to get or set doesn't exist in the register. " +
-                                            "Please check the spelling");
+                                     "Please check the spelling");
     }
 }

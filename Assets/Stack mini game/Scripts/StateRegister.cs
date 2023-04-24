@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "State register", menuName = "ScriptableObjects/Stack mini game state register", order = 1)]
-public class StackMiniGame_StateRegister : ScriptableObject
+public class StateRegister : ScriptableObject
 {
     [SerializeField] private string[] states;
 

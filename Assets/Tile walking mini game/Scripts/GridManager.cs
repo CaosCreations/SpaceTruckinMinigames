@@ -11,17 +11,25 @@ public class GridManager : MonoBehaviour
 
     [SerializeField] private TileColorManager tileColorManager;
 
-    [SerializeField] private ObstaclesPosition[][] obstacleLayouts;
+    private ObstaclesPosition[][] obstacleLayouts;
 
     [SerializeField] private GameObject TilePrefab;
 
-    public Action WinEvent;
+    public Action<GameState> GameEventUpdatedEvent;
 
-    public Action LoseEvent;
-    public int UntouchedTileCount { get; private set; }
+    public Action<Tile> TileStatusChangedEvent;
+
+    public int touchedTiles_Percent { get; private set; } = 0;
 
     public int GridWidth { get; private set; } = 5;
     public int GridHeight { get; private set; } = 5;
+
+    [SerializeField] private GameState currentGameState;
+
+    [Range(20, 95)]
+    [SerializeField] private int partialWinThreshold_Percent = 75;
+
+    private Tile currentTile;
 
     private void Awake()
     {
@@ -36,6 +44,10 @@ public class GridManager : MonoBehaviour
 
     public void ResetGrid()
     {
+        currentGameState.SetCurrentState("new game");
+        GameEventUpdatedEvent?.Invoke(currentGameState);
+        touchedTiles_Percent = 0;
+
         foreach (Tile tile in tileGrid)
         {
             tile.TileStatus = TileStatus.Untouched;
@@ -55,14 +67,35 @@ public class GridManager : MonoBehaviour
     {
         ObstaclesPosition[] randomlyPickedLayout = obstacleLayouts[UnityEngine.Random.Range(0, obstacleLayouts.Length)];
 
-        UntouchedTileCount = GridWidth * GridHeight - randomlyPickedLayout.Length;
-
         foreach (ObstaclesPosition item in randomlyPickedLayout)
         {
             Tile tile = GetTileAt(item.Xposition, item.Yposition);
 
             tile.TileStatus = TileStatus.Obstacle;
         }
+    }
+
+    // As a new game starts, we randomly pick an obstacle layout for the map
+    // We can create more layout below, by adding them to the obstacleLayouts array
+    private void CreateObstaclesLayouts()
+    {
+        obstacleLayouts = new ObstaclesPosition[2][];
+
+        obstacleLayouts[0] = new ObstaclesPosition[5]
+        {                           new ObstaclesPosition (0,2),
+                                    new ObstaclesPosition (0,3),
+                                    new ObstaclesPosition (0,4),
+                                    new ObstaclesPosition (2,3),
+                                    new ObstaclesPosition (2,4),
+        };
+
+        obstacleLayouts[1] = new ObstaclesPosition[5]
+        {                           new ObstaclesPosition (2,2),
+                                    new ObstaclesPosition (3,2),
+                                    new ObstaclesPosition (0,4),
+                                    new ObstaclesPosition (1,4),
+                                    new ObstaclesPosition (2,4),
+        };
     }
 
     private void SpawnTiles()
@@ -87,58 +120,45 @@ public class GridManager : MonoBehaviour
         }
     }
 
-
-    // As a new game starts, we randomly pick an obstacle layout for the map
-    // We can create more layout below, by adding them to the obstacleLayouts array
-    private void CreateObstaclesLayouts()
-    {
-        obstacleLayouts = new ObstaclesPosition[3][];
-
-        obstacleLayouts[0] = new ObstaclesPosition[5]
-        {                           new ObstaclesPosition (0,2),
-                                    new ObstaclesPosition (0,3),
-                                    new ObstaclesPosition (0,4),
-                                    new ObstaclesPosition (2,3),
-                                    new ObstaclesPosition (2,4),
-        };
-
-        obstacleLayouts[1] = new ObstaclesPosition[5]
-        {                           new ObstaclesPosition (2,2),
-                                    new ObstaclesPosition (3,2),
-                                    new ObstaclesPosition (0,4),
-                                    new ObstaclesPosition (1,4),
-                                    new ObstaclesPosition (2,4),
-        };
-
-        obstacleLayouts[2] = new ObstaclesPosition[3]
-        {                           new ObstaclesPosition (1,2),
-                                    new ObstaclesPosition (2,2),
-                                    new ObstaclesPosition (3,3),
-        };
-    }
-
     // If the player walks on all tiles only once, he or she wins
     // If the player walks on the same tile twice, it's game over
     public void UpdateTileStatus(int Xposition, int Yposition)
     {
-        Tile tile = GetTileAt(Xposition, Yposition);
+        currentTile = GetTileAt(Xposition, Yposition);
 
-        if (tile.TileStatus == TileStatus.Untouched)
+        if (currentTile.TileStatus == TileStatus.Untouched)
         {
-            tile.TileStatus = TileStatus.Touched;
-            UntouchedTileCount--;
+            currentTile.TileStatus = TileStatus.Touched;
+            touchedTiles_Percent += 5;
         }
 
-        else if (tile.TileStatus == TileStatus.Touched)
+        else if (currentTile.TileStatus == TileStatus.Touched)
         {
-            tile.TileStatus = TileStatus.TouchedTwice;
-            LoseEvent();
+            currentTile.TileStatus = TileStatus.TouchedTwice;
         }
 
-        tileColorManager.ChangeTileColorBasedOnStatus(tile);
+        tileColorManager.ChangeTileColorBasedOnStatus(currentTile);
 
-        if (UntouchedTileCount == 0)
-            WinEvent();
+        TileStatusChangedEvent?.Invoke(currentTile);
+
+        UpdateGameState();
+    }
+
+    private void UpdateGameState()
+    {
+        if (touchedTiles_Percent == 100)
+            currentGameState.SetCurrentState("full win");
+
+        else if (currentTile.TileStatus == TileStatus.TouchedTwice && touchedTiles_Percent >= partialWinThreshold_Percent)
+            currentGameState.SetCurrentState("partial win");
+
+        else if (currentTile.TileStatus == TileStatus.TouchedTwice && touchedTiles_Percent < partialWinThreshold_Percent)
+            currentGameState.SetCurrentState("lose");
+
+        else
+            currentGameState.SetCurrentState("ongoing");
+
+        GameEventUpdatedEvent?.Invoke(currentGameState);
     }
 
     public Tile GetTileAt(int Xposition, int Yposition)

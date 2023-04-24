@@ -28,8 +28,7 @@ public class PlayerControls : MonoBehaviour
     private void Awake()
     {
         playerStartPosition = playerRectTransform.localPosition;
-        gridManager.WinEvent += DisablePlayerMovement;
-        gridManager.LoseEvent += DisablePlayerMovement;
+        gridManager.GameEventUpdatedEvent += DisablePlayerMovement;
     }
 
     private void Update()
@@ -89,8 +88,12 @@ public class PlayerControls : MonoBehaviour
         }  
     }
 
-    private void DisablePlayerMovement()
+    private void DisablePlayerMovement(GameState gameState)
     {
+        if(gameState.CheckCurrentState("lose") ||
+           gameState.CheckCurrentState("partial win") ||
+           gameState.CheckCurrentState("full win"))
+
         canMove = false;
     }
 
