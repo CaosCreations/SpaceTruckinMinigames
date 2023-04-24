@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class TileWalkingUI : MonoBehaviour
@@ -66,10 +65,9 @@ public class TileWalkingUI : MonoBehaviour
 
         int number = 5 + gridManager.touchedTiles_Percent;
 
-        if(number > 100)
-            number = 100;
+        number = Mathf.Clamp(number, 0, 100);
 
-        currentScoreText.text = number.ToString() + "%";
+        currentScoreText.text = number + "%";
     }
 
     private void UpdateTimer(int timeLeft)
