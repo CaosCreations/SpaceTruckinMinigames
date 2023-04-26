@@ -12,7 +12,7 @@ public class Timer : MonoBehaviour
 
     private int _timeLeft;
 
-    private int timeLeft
+    private int TimeLeft
     {
         get
         { 
@@ -25,6 +25,9 @@ public class Timer : MonoBehaviour
             TimerUpdatedEvent(_timeLeft);
         }
     }
+
+
+    private bool timerRunning = false;
 
     private IEnumerator timerCoroutine;
 
@@ -41,10 +44,7 @@ public class Timer : MonoBehaviour
     {
         if (gameState.CheckCurrentState("new game"))
             StartTimer();
-
-        else if (gameState.CheckCurrentState("full win") || 
-                 gameState.CheckCurrentState("partial win") || 
-                 gameState.CheckCurrentState("lose"))
+        else if (gameState.CheckCurrentState(new List<string>() { "full win", "partial win", "lose" }) == true)
         {
             StopTimer();
         }
@@ -66,7 +66,7 @@ public class Timer : MonoBehaviour
 
     public void StopTimer()
     {
-        if(timerCoroutine != null)
+        if(timerRunning == true && timerCoroutine != null)
         {
             StopCoroutine(timerCoroutine);
             timerRunning = false;
@@ -77,13 +77,13 @@ public class Timer : MonoBehaviour
     {
         timerRunning = true;
 
-        timeLeft = timerDuration;
+        TimeLeft = timerDuration;
 
-        while(timeLeft > 0) 
+        while(TimeLeft > 0) 
         {
             yield return new WaitForSeconds(1f);
 
-            timeLeft -= 1;
+            TimeLeft -= 1;
         }
 
         timerRunning = false;

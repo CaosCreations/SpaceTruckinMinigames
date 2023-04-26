@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditorInternal;
 using UnityEngine;
 using static UnityEngine.Random;
@@ -20,11 +21,14 @@ public class GameState
 
     public bool CheckCurrentState(string state)
     {
-        string result;
-
-        TryGetState(state, out result);
+        TryGetState(state, out string result);
 
         return currentState == result;
+    }
+
+    public bool CheckCurrentState(IEnumerable<string> states)
+    {
+        return states.Any(state => TryGetState(state, out string result) && currentState == result);
     }
 
     private bool TryGetState(string state, out string result)
