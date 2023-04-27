@@ -33,8 +33,6 @@ public class Timer : MonoBehaviour
 
     public Action<int> TimerUpdatedEvent;
 
-    private bool timerRunning = false;
-
     private void Awake()
     {
         gridManager.GameEventUpdatedEvent += UpdateTimer;
