@@ -8,7 +8,10 @@ public class PlayerControls : MonoBehaviour
 
     [SerializeField] private RectTransform playerRectTransform;
 
-    [SerializeField] private TileWalkingUI tileWalkingUI;
+    [SerializeField] private AnimationCurve playerMovementAnimationCurve;
+
+    [Range(0.1f, 1f)]
+    [SerializeField] private float playerMovementLerpDuration;
 
     private Vector3 playerStartPosition;
 
@@ -41,7 +44,7 @@ public class PlayerControls : MonoBehaviour
         if (playerInput == defaultInput)
             return;
 
-        MovePlayerToTile(Xmovement: playerInput[0], Ymovement: playerInput[1]);
+        StartCoroutine(MoveToTile(Xmovement: playerInput[0], Ymovement: playerInput[1]));
     }
 
     private int[] GetPlayerInput()
@@ -76,17 +79,40 @@ public class PlayerControls : MonoBehaviour
     // The player moves on the grid one tile at a time. Left, right, up or down.
     // We use the grid's X and Y axis to do so
 
-    private void MovePlayerToTile(int Xmovement, int Ymovement)
+    private IEnumerator MoveToTile(int Xmovement, int Ymovement)
     {
         if (CheckIfTileIsWalkable(XInput: Xmovement, YInput: Ymovement))
         {
             playerXGridPosition += Xmovement;
             playerYGridPosition += Ymovement;
 
-            playerRectTransform.position = gridManager.GetTileAt(playerXGridPosition, playerYGridPosition).RectTransform.position;
+            Vector2 destination = gridManager.GetTileAt(playerXGridPosition, playerYGridPosition).RectTransform.position;
+            yield return StartCoroutine(AnimateMovement(destination));
+
             gridManager.UpdateTileStatus(playerXGridPosition, playerYGridPosition);
         }  
     }
+
+    private IEnumerator AnimateMovement(Vector2 destination)
+    {
+        canMove = false;
+
+        float elapsedTime = 0f;
+
+        Vector2 startPosition = playerRectTransform.position;
+
+        while (elapsedTime < playerMovementLerpDuration)
+        {
+            playerRectTransform.position = Vector2.Lerp(startPosition, destination, playerMovementAnimationCurve.Evaluate(elapsedTime / playerMovementLerpDuration));
+
+            elapsedTime += Time.deltaTime;
+
+            yield return null;
+        }
+
+        canMove = true;
+    }
+
 
     private void DisablePlayerMovement(GameState gameState)
     {
