@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class PlayerControls : MonoBehaviour
 {
+    [Header("Dependencies")]
+
     [SerializeField] private GridManager gridManager;
 
     [SerializeField] private RectTransform playerRectTransform;
+
+    [SerializeField] private ScreenShaker screenShaker;
+
+    [Header("Player animation")]
 
     [SerializeField] private AnimationCurve playerMovementAnimationCurve;
 
@@ -90,6 +96,8 @@ public class PlayerControls : MonoBehaviour
             yield return StartCoroutine(AnimateMovement(destination));
 
             gridManager.UpdateTileStatus(playerXGridPosition, playerYGridPosition);
+
+            screenShaker.ShakeScreen(0.25f);
         }  
     }
 
