@@ -73,12 +73,12 @@ public class CubeMover : MonoBehaviour
 
             if (isClose)
             {
-                currentMovingCube.gameObject.GetComponent<CubeAppearance>().SetSlowSpeedMaterial();
+                currentMovingCube.gameObject.GetComponent<CubeAnimationController>().SetSlowSpeedAnimateState();
                 currentMovingSpeed = slowMovingSpeed;
             }
             else
             {
-                currentMovingCube.gameObject.GetComponent<CubeAppearance>().SetNormalSpeedMaterial();
+                currentMovingCube.gameObject.GetComponent<CubeAnimationController>().SetNormalSpeedAnimationState();
                 currentMovingSpeed = normalMovingSpeed;
             }
         }
