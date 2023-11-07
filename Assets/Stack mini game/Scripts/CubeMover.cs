@@ -93,6 +93,9 @@ public class CubeMover : MonoBehaviour
     private void ToggleMoveCube(bool onOff)
     {
         canMoveCube = onOff;
+
+        if(canMoveCube == false)
+            currentMovingCube.gameObject.GetComponent<CubeAnimationController>().SetCubeAnimationState();
     }
 
     public IEnumerator FreezeCubeMovement(float seconds)

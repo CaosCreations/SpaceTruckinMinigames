@@ -7,6 +7,7 @@ public class CubeAnimationController : MonoBehaviour
 {
     private const string normalSpeedAnimationState = "NormalSpeed";
     private const string slowSpeedAnimationState = "SlowSpeed";
+    private const string setCubeAnimationState = "SetCube";
 
     private Animator animator;
 
@@ -28,6 +29,11 @@ public class CubeAnimationController : MonoBehaviour
     public void SetSlowSpeedAnimateState()
     {
         SetAnimationState(slowSpeedAnimationState);
+    }
+
+    public void SetCubeAnimationState()
+    {
+        SetAnimationState(setCubeAnimationState);
     }
 
     private void SetAnimationState(string stateName)

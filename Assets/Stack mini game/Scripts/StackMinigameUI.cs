@@ -24,10 +24,8 @@ public class StackMinigameUI : MonoBehaviour
             gameResultMessageDictionary.Add(gameResultUIdata.State, gameResultUIdata);
         }
 
-        stackButton.onClick.RemoveAllListeners();
         stackButton.onClick.AddListener(() => gameplayManager.StackCube());
 
-        replayButton.onClick.RemoveAllListeners();
         replayButton.onClick.AddListener(gameplayManager.ResetGame);
 
         gameplayManager.GameResetEvent += () => SetGameUI(gameplayManager.GameStates);
